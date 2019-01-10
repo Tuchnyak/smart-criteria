@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -39,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private LineDataSet smartProjectMaxPaceDataSet;
     private LineDataSet smartProjectCurrentPaceDataSet;
 
-    private IAxisValueFormatter xAxisFormatter;
-
     private SmartProject smartProject;
 
 
@@ -58,59 +57,24 @@ public class MainActivity extends AppCompatActivity {
         drawChart();
         setupChart();
 
-        // simulate increasing of a project's progress
-
-
-        // **********************************************
-        //
-        // generate fake current map for a project
-//        Map<Date, Float> fakeCurrentData = new TreeMap<>();
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime()), 253f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 1 * 24 * 60 * 60 * 1000), 247f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 2 * 24 * 60 * 60 * 1000), 234f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 3 * 24 * 60 * 60 * 1000), 234f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 4 * 24 * 60 * 60 * 1000), 217f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 5 * 24 * 60 * 60 * 1000), 206f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 6 * 24 * 60 * 60 * 1000), 201f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 7 * 24 * 60 * 60 * 1000), 188f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 8 * 24 * 60 * 60 * 1000), 169f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 9 * 24 * 60 * 60 * 1000), 154f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 10 * 24 * 60 * 60 * 1000), 143f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 11 * 24 * 60 * 60 * 1000), 140f);
-//        fakeCurrentData.put(new Date(smartProject.getStartDay().getTime() + 12 * 24 * 60 * 60 * 1000), 132f);
-//
-//        smartProject.setEntriesCurrentPace(fakeCurrentData);
-//        smartProject.setCurrentProgress(272 - 132);
-//
-//        smartProject.checkAndFillGaps();
-//
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//        smartProject.increaseCurrentProgress();
-//
-//        drawChart();
-//        setupChart();
-
-        smartProject.increaseCurrentProgress();
-        drawChart();
-        setupChart();
-        smartProject.increaseCurrentProgress();
-        drawChart();
-        setupChart();
-        smartProject.increaseCurrentProgress();
-        drawChart();
-        setupChart();
 
     }
 
 
+    public void buttonIncreaseOnClick(View view) {
+
+        smartProject.checkAndFillGaps();
+        smartProject.increaseCurrentProgress();
+        drawChart();
+        setupChart();
+        lineChart.notifyDataSetChanged();
+
+    }
+
+
+    /**
+     * Setup chart options
+     */
     private void setupChart() {
 
         float textSizeMinorChart = 12f;
@@ -143,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         XAxis xAxis = lineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1f);
-        xAxis.setValueFormatter(xAxisFormatter);
         xAxis.setAxisMinimum(0f);
         xAxis.setDrawGridLines(showGridLines);
 
@@ -190,6 +153,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Setup some dataset options
+     * @param dataSet
+     * @param color
+     * @param drawValues
+     * @param textSize
+     * @param lineWidth
+     */
     private void dataSetSetup(LineDataSet dataSet, int color, boolean drawValues, float textSize, float lineWidth) {
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         dataSet.setColor(getResources().getColor(color));
@@ -202,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Draw chart from project instance
+     */
     private void drawChart() {
 
         smartProject.checkAndFillGaps();
@@ -248,30 +222,22 @@ public class MainActivity extends AppCompatActivity {
         LineData chartData = new LineData(dataSets);
 
         // setup labels for X axis
+        XAxis xAxis = lineChart.getXAxis();
+
         final String[] days = smartProject.getDaysAsStringArray();
-        xAxisFormatter = new IAxisValueFormatter() {
+
+        IAxisValueFormatter xAxisFormatter = new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
                 return days[(int) value];
             }
         };
 
+        xAxis.setValueFormatter(xAxisFormatter);
 
         // setup chart data and draw
         lineChart.setData(chartData);
         lineChart.invalidate();
-
-
-//        // get data and datasets from line chart
-//        LineData reverseChartData = lineChart.getData();
-//        List<ILineDataSet> reverseDataSets = reverseChartData.getDataSets();
-//
-//        // add current data set to existing data sets
-//        reverseDataSets.add(smartProjectCurrentPaceDataSet);
-
-        // draw chart
-//        lineChart.setData(reverseChartData);
-//        lineChart.invalidate();
 
     }
 
@@ -315,47 +281,6 @@ public class MainActivity extends AppCompatActivity {
         for (float f : smartProject.getFloatNumbersForXAxis()) {
             System.out.println(f);
         }
-
-
-        /**
-         //         * Testing Project 2
-         //         */
-//
-//        startDay = null;
-//
-//        try {
-//            startDay = dateFormat.parse("01-11-2018");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        SmartProject smartProject2 = null;
-//
-//        if (startDay != null) {
-//
-//            smartProject2 = new SmartProject("Test project 2", "Second test descroption",
-//                    53, startDay, 7, 13);
-//
-//            Log.i("===>>>", smartProject2.toString());
-//            smartProject2.printEntries();
-//
-//        } else {
-//            Log.e("===>>>", "Some date are null!");
-//        }
-//
-//        for (float f : smartProject2.getYAxisChartValuesMinPace()) {
-//            System.out.println(f);
-//        }
-//        for (float f : smartProject2.getYAxisChartValuesMaxPace()) {
-//            System.out.println(f);
-//        }
-//        for (float f : smartProject2.getFloatNumbersForXAxis()) {
-//            System.out.println(f);
-//        }
-//
-//        /**
-//         *******************************************************************************************
-//         */
 
     }
 

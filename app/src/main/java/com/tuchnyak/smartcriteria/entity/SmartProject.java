@@ -201,19 +201,22 @@ public class SmartProject {
      */
     public void checkAndFillGaps() {
 
-        if (entriesCurrentPace.size() == 0) {
+        if (!isFinished) {
 
-            fillGaps(startDay);
+            if (entriesCurrentPace.size() == 0) {
 
-        } else {
+                fillGaps(startDay);
 
-            TreeMap<Date, Float> tempEntriesCurrentPace = (TreeMap<Date, Float>) entriesCurrentPace;
-            Date lastDay = new Date(tempEntriesCurrentPace.lastKey().getTime());
+            } else {
 
-            fillGaps(lastDay);
+                TreeMap<Date, Float> tempEntriesCurrentPace = (TreeMap<Date, Float>) entriesCurrentPace;
+                Date lastDay = new Date(tempEntriesCurrentPace.lastKey().getTime());
+
+                fillGaps(lastDay);
+
+            }
 
         }
-
 
     }
 
