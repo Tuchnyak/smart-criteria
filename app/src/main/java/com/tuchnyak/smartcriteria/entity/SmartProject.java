@@ -107,12 +107,8 @@ public class SmartProject {
         this.deadlineDayMaxPace = deadlineDayMaxPace;
 
         // calculating the number of days required to complete a project at both paces
-        amountOfDaysMinPace = 1 + TimeUnit.DAYS
-                .convert(deadlineDayMinPace.getTime() - startDay.getTime(),
-                        TimeUnit.MILLISECONDS);
-        amountOfDaysMaxPace = 1 + TimeUnit.DAYS
-                .convert(deadlineDayMaxPace.getTime() - startDay.getTime(),
-                        TimeUnit.MILLISECONDS);
+        amountOfDaysMinPace = 1 + getGapDays(startDay, deadlineDayMinPace);
+        amountOfDaysMaxPace = 1 + getGapDays(startDay, deadlineDayMaxPace);
 
         // calculating units per day for both paces
         unitsPerDayMinPace = (double) unitsTotal / amountOfDaysMinPace;
@@ -161,6 +157,7 @@ public class SmartProject {
 
     }
 
+
     /**
      * Initializing and populating lists of entries.
      *
@@ -199,9 +196,72 @@ public class SmartProject {
     }
 
 
+    /**
+     * Checking existence of gap days and fill them accordingly to current progress.
+     */
+    public void checkAndFillGaps() {
 
-    // Applied methods
-    //TODO: check for blank days between today and last stored entry OR MADE SEPARATE CHECK() METHOD!!!
+        if (entriesCurrentPace.size() == 0) {
+
+            fillGaps(startDay);
+
+        } else {
+
+            TreeMap<Date, Float> tempEntriesCurrentPace = (TreeMap<Date, Float>) entriesCurrentPace;
+            Date lastDay = new Date(tempEntriesCurrentPace.lastKey().getTime());
+
+            fillGaps(lastDay);
+
+        }
+
+
+    }
+
+
+    /**
+     * Fill gaps between today and last mapped day
+     *
+     * @param lastDay the day from which it is needed to fill gap days
+     */
+    private void fillGaps(Date lastDay) {
+
+        if (getTodayOfMidnight().equals(lastDay)) {
+
+            entriesCurrentPace.put(getTodayOfMidnight(), (float) unitsTotal - currentProgress);
+
+        } else {
+
+            long gapDays = getGapDays(lastDay, getTodayOfMidnight());
+            float gapRemainder = (float) unitsTotal - currentProgress;
+
+            Date tempDate = new Date(lastDay.getTime());
+
+            for (int i = 0; i <= gapDays; i++) {
+                entriesCurrentPace.put(new Date(tempDate.getTime()), gapRemainder);
+                tempDate.setTime(tempDate.getTime() + ONE_DAY_IN_MILLIS);
+
+            }
+
+        }
+
+    }
+
+
+    /**
+     * Calculating of the amount of date between two dates.
+     *
+     * @param earlier earlier date, for example September 1th
+     * @param later   later date, for example September 2th
+     * @return later minus earlier equals 1 gap day
+     */
+    private long getGapDays(Date earlier, Date later) {
+
+        return TimeUnit.DAYS
+                .convert(later.getTime() - earlier.getTime(),
+                        TimeUnit.MILLISECONDS);
+    }
+
+
     public void increaseCurrentProgress() {
 
         if (!isFinished) {
@@ -323,6 +383,7 @@ public class SmartProject {
 
     /**
      * Method to extract values for charts from storing maps.
+     *
      * @param entriesMap - map with data
      * @return float[] - extracted float values for Y Axis
      */
