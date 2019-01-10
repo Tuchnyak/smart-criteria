@@ -36,6 +36,7 @@ import java.util.TreeMap;
 public class MainActivity extends AppCompatActivity {
 
     private LineChart lineChart;
+    private SmartProject smartProject;
 
 
     @Override
@@ -43,47 +44,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initiate test project
+        initiateProject();
+
+        // draw chart of initiated test project
+
+        // simulate increasing of a project's progress
+
 
         /**
          * Testing Project
          */
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
-        Date startDay = null;
-        Date deadlineMinPace = null;
-        Date deadlineMaxPace = null;
-
-        try {
-            startDay = dateFormat.parse("26-11-2018");
-            deadlineMinPace = dateFormat.parse("23-12-2018");
-            deadlineMaxPace = dateFormat.parse("09-12-2018");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        SmartProject smartProject = null;
-
-        if (startDay != null && deadlineMinPace != null && deadlineMaxPace != null) {
-
-            smartProject = new SmartProject("Test project", "Test project description",
-                    272, startDay, deadlineMinPace, deadlineMaxPace);
-
-            Log.i("===>>>", smartProject.toString());
-            smartProject.printEntries();
-
-        } else {
-            Log.e("===>>>", "Some date are null!");
-        }
-
-        for (float f : smartProject.getYAxisChartValuesMinPace()) {
-            System.out.println(f);
-        }
-        for (float f : smartProject.getYAxisChartValuesMaxPace()) {
-            System.out.println(f);
-        }
-        for (float f : smartProject.getFloatNumbersForXAxis()) {
-            System.out.println(f);
-        }
 
         /**
          *******************************************************************************************
@@ -345,6 +317,49 @@ public class MainActivity extends AppCompatActivity {
         // draw chart
 //        lineChart.setData(reverseChartData);
         lineChart.invalidate();
+
+    }
+
+
+    private void initiateProject() {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+
+        Date startDay = null;
+        Date deadlineMinPace = null;
+        Date deadlineMaxPace = null;
+
+        try {
+            startDay = dateFormat.parse("26-11-2018");
+            deadlineMinPace = dateFormat.parse("23-12-2018");
+            deadlineMaxPace = dateFormat.parse("09-12-2018");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (startDay != null && deadlineMinPace != null && deadlineMaxPace != null) {
+
+            smartProject = new SmartProject("Test project", "Test project description",
+                    272, startDay, deadlineMinPace, deadlineMaxPace);
+
+            Log.i("===>>>", smartProject.toString());
+            smartProject.printEntries();
+
+        } else {
+            Log.e("===>>>", "Some date are null!");
+        }
+
+        for (float f : smartProject.getYAxisChartValuesMinPace()) {
+            System.out.println(f);
+        }
+
+        for (float f : smartProject.getYAxisChartValuesMaxPace()) {
+            System.out.println(f);
+        }
+
+        for (float f : smartProject.getFloatNumbersForXAxis()) {
+            System.out.println(f);
+        }
 
     }
 
