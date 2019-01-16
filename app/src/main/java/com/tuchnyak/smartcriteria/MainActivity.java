@@ -1,5 +1,7 @@
 package com.tuchnyak.smartcriteria;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -7,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -21,6 +25,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.tuchnyak.smartcriteria.entity.SmartProject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,16 +47,22 @@ public class MainActivity extends AppCompatActivity {
 
     private SmartProject smartProject;
 
+    private SharedPreferences sharedPreferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPreferences = this.getSharedPreferences("com.tuchnyak.smartcriteria", Context.MODE_PRIVATE);
+
         lineChart = findViewById(R.id.lineChart);
 
-        // initiate test project
-        initiateProject();
+        smartProject = getSmartProject();
+
+        // initiate test project if does not exists
+        if (smartProject == null) initiateProject();
 
         // draw chart of initiated test project
         drawChart();
@@ -68,6 +79,45 @@ public class MainActivity extends AppCompatActivity {
         drawChart();
         setupChart();
         lineChart.notifyDataSetChanged();
+
+        saveProject();
+
+    }
+
+
+    /**
+     * @return smart project from JSON saved in shared preferences
+     */
+    private SmartProject getSmartProject() {
+
+        String stringJSON = sharedPreferences.getString("smartProject", "");
+
+        ObjectMapper om = new ObjectMapper();
+
+        SmartProject smartProject = null;
+
+        try {
+            smartProject = om.readValue(stringJSON, SmartProject.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return smartProject;
+    }
+
+    /**
+     * Save project instance to shared preferences
+     */
+    private void saveProject() {
+
+        ObjectMapper om = new ObjectMapper();
+
+        try {
+            sharedPreferences.edit().putString("smartProject", om.writeValueAsString(smartProject)).apply();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Saving problems!", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -155,11 +205,12 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Setup some dataset options
-     * @param dataSet
-     * @param color
-     * @param drawValues
-     * @param textSize
-     * @param lineWidth
+     *
+     * @param dataSet LineDataSet for setup
+     * @param color chart color
+     * @param drawValues draw values of chart or not
+     * @param textSize values text size
+     * @param lineWidth width of an chart line
      */
     private void dataSetSetup(LineDataSet dataSet, int color, boolean drawValues, float textSize, float lineWidth) {
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);

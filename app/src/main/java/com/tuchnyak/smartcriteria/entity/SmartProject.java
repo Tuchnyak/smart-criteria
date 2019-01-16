@@ -1,6 +1,8 @@
 package com.tuchnyak.smartcriteria.entity;
 
-import android.util.Log;
+import android.support.annotation.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,9 +68,9 @@ public class SmartProject {
     /**
      * Collections of units per day for a minimum pace, maximum pace and current project charts.
      */
-    private Map<Date, Float> entriesMinPace;
-    private Map<Date, Float> entriesMaxPace;
-    private Map<Date, Float> entriesCurrentPace;
+    private TreeMap<Date, Float> entriesMinPace;
+    private TreeMap<Date, Float> entriesMaxPace;
+    private TreeMap<Date, Float> entriesCurrentPace;
 
     /**
      * Variable to store current progress of a project
@@ -209,7 +211,7 @@ public class SmartProject {
 
             } else {
 
-                TreeMap<Date, Float> tempEntriesCurrentPace = (TreeMap<Date, Float>) entriesCurrentPace;
+                TreeMap<Date, Float> tempEntriesCurrentPace = entriesCurrentPace;
                 Date lastDay = new Date(tempEntriesCurrentPace.lastKey().getTime());
 
                 fillGaps(lastDay);
@@ -302,6 +304,7 @@ public class SmartProject {
     /**
      * @return String[] days formatted by pattern: "dd MMM"
      */
+    @JsonIgnore
     public String[] getDaysAsStringArray() {
 
         String[] days;
@@ -334,6 +337,7 @@ public class SmartProject {
     /**
      * @return float[] for X axis numeration
      */
+    @JsonIgnore
     public float[] getFloatNumbersForXAxis() {
 
         int count;
@@ -360,6 +364,7 @@ public class SmartProject {
     /**
      * @return float[] values for min pace charts
      */
+    @JsonIgnore
     public float[] getYAxisChartValuesMinPace() {
 
         return getFloatsForAxisFromEntries(entriesMinPace);
@@ -369,6 +374,7 @@ public class SmartProject {
     /**
      * @return float[] values for max pace charts
      */
+    @JsonIgnore
     public float[] getYAxisChartValuesMaxPace() {
 
         return getFloatsForAxisFromEntries(entriesMaxPace);
@@ -378,6 +384,7 @@ public class SmartProject {
     /**
      * @return float[] values for current pace charts
      */
+    @JsonIgnore
     public float[] getYAxisChartValuesCurrentPace() {
 
         return getFloatsForAxisFromEntries(entriesCurrentPace);
@@ -390,6 +397,7 @@ public class SmartProject {
      * @param entriesMap - map with data
      * @return float[] - extracted float values for Y Axis
      */
+    @JsonIgnore
     private float[] getFloatsForAxisFromEntries(Map<Date, Float> entriesMap) {
 
         Float[] objArr = entriesMap.values().toArray(new Float[0]);
@@ -422,7 +430,7 @@ public class SmartProject {
             sb.append(dateFormat.format(entry.getKey())).append(" : ").append(entry.getValue()).append("\n");
         }
 
-        Log.i("***===>>> TEST values", sb.toString());
+        System.out.println("***===>>> TEST values" + sb.toString());
 
         sb = new StringBuilder();
         sb.append("\nDays in string array:\n");
@@ -430,7 +438,7 @@ public class SmartProject {
             sb.append(day).append("\n");
         }
 
-        Log.i("***===>>> TEST values", sb.toString());
+        System.out.println("***===>>> TEST values" + sb.toString());
 
     }
 
@@ -520,7 +528,7 @@ public class SmartProject {
         return entriesMinPace;
     }
 
-    public void setEntriesMinPace(Map<Date, Float> entriesMinPace) {
+    public void setEntriesMinPace(TreeMap<Date, Float> entriesMinPace) {
         this.entriesMinPace = entriesMinPace;
     }
 
@@ -528,7 +536,7 @@ public class SmartProject {
         return entriesMaxPace;
     }
 
-    public void setEntriesMaxPace(Map<Date, Float> entriesMaxPace) {
+    public void setEntriesMaxPace(TreeMap<Date, Float> entriesMaxPace) {
         this.entriesMaxPace = entriesMaxPace;
     }
 
@@ -536,7 +544,7 @@ public class SmartProject {
         return entriesCurrentPace;
     }
 
-    public void setEntriesCurrentPace(Map<Date, Float> entriesCurrentPace) {
+    public void setEntriesCurrentPace(TreeMap<Date, Float> entriesCurrentPace) {
         this.entriesCurrentPace = entriesCurrentPace;
     }
 
@@ -556,6 +564,7 @@ public class SmartProject {
         isFinished = finished;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "\nSmartProject{" +
