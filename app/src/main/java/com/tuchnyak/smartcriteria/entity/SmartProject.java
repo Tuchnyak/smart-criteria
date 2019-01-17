@@ -412,15 +412,12 @@ public class SmartProject {
     }
 
 
-    //TODO: Move test to unit tests!!!!
-    @Deprecated
     public void printEntries() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM", Locale.getDefault());
 
         StringBuilder sb = new StringBuilder();
 
         sb.append("\nGenerated dates:\n").append("Minimum pace chart values:\n");
-
         for (Map.Entry<Date, Float> entry : entriesMinPace.entrySet()) {
             sb.append(dateFormat.format(entry.getKey())).append(" : ").append(entry.getValue()).append("\n");
         }
