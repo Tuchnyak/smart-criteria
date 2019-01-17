@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -69,6 +70,45 @@ public class SmartProjectTest {
 
         assertEquals(5, smp.getAmountOfDaysMaxPace());
 
+
+    }
+
+
+    /**
+     * Checking current progress entries
+     */
+    @Test
+    public void currentProgressTest() {
+
+        smp.checkAndFillGaps();
+        smp.increaseCurrentProgress();
+        smp.increaseCurrentProgress();
+        smp.increaseCurrentProgress();
+        smp.increaseCurrentProgress();
+        smp.increaseCurrentProgress();
+
+        assertEquals(5, smp.getCurrentProgress());
+        assertEquals(30, smp.getUnitsTotal() - smp.getCurrentProgress());
+        assertEquals(Float.valueOf(30), smp.getEntriesCurrentPace().lastEntry().getValue());
+        assertTrue(smp.getEntriesCurrentPace().size() > 0);
+        assertFalse(smp.isFinished());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-YY", Locale.getDefault());
+
+        for (Map.Entry<Date, Float> entry : smp.getEntriesCurrentPace().entrySet()) {
+            System.out.println(dateFormat.format(entry.getKey()) + " : " + entry.getValue());
+        }
+
+
+        for (int i = 0; i < 30; i++) {
+            smp.increaseCurrentProgress();
+        }
+
+        assertTrue(smp.isFinished());
+
+        smp.increaseCurrentProgress();
+
+        assertEquals(Float.valueOf(0), smp.getEntriesCurrentPace().lastEntry().getValue());
 
     }
 

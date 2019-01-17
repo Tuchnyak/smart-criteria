@@ -524,7 +524,7 @@ public class SmartProject {
         this.unitsPerDayMaxPace = unitsPerDayMaxPace;
     }
 
-    public Map<Date, Float> getEntriesMinPace() {
+    public TreeMap<Date, Float> getEntriesMinPace() {
         return entriesMinPace;
     }
 
@@ -532,7 +532,7 @@ public class SmartProject {
         this.entriesMinPace = entriesMinPace;
     }
 
-    public Map<Date, Float> getEntriesMaxPace() {
+    public TreeMap<Date, Float> getEntriesMaxPace() {
         return entriesMaxPace;
     }
 
@@ -540,7 +540,7 @@ public class SmartProject {
         this.entriesMaxPace = entriesMaxPace;
     }
 
-    public Map<Date, Float> getEntriesCurrentPace() {
+    public TreeMap<Date, Float> getEntriesCurrentPace() {
         return entriesCurrentPace;
     }
 
