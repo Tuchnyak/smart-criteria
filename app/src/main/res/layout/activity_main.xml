@@ -6,24 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/buttonIncrease"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="40dp"
-        android:clickable="true"
-        android:onClick="buttonIncreaseOnClick"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:focusable="true" />
-
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
+    <ListView
+        android:id="@+id/listProjects"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
+        android:layout_height="match_parent" />
 </RelativeLayout>

@@ -1,28 +1,21 @@
 package com.tuchnyak.smartcriteria;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.tuchnyak.smartcriteria.entity.SmartProject;
 
 import java.io.IOException;
@@ -32,22 +25,25 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  *
  */
 public class MainActivity extends AppCompatActivity {
 
-    private LineChart lineChart;
-    private LineDataSet smartProjectMinPaceDataSet;
-    private LineDataSet smartProjectMaxPaceDataSet;
-    private LineDataSet smartProjectCurrentPaceDataSet;
+    /**
+     * List to keep all projects
+     */
+    public static List<SmartProject> smartProjectList;
+    public static List<String> smartProjectNameList;
 
-    private SmartProject smartProject;
+    public static ArrayAdapter<String> adapter;
 
+    private ListView listProjectsView;
     private SharedPreferences sharedPreferences;
+
+    private static final String STRING_TO_SAVE_PROJECT_LIST = "projectsList";
+    public static final String PROJECT_ID_STRING_NAME = "projectId";
 
 
     @Override
@@ -55,245 +51,152 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences = this.getSharedPreferences("com.tuchnyak.smartcriteria", Context.MODE_PRIVATE);
 
-        lineChart = findViewById(R.id.lineChart);
+        sharedPreferences = this
+                .getSharedPreferences("com.tuchnyak.smartcriteria", Context.MODE_PRIVATE);
 
-        smartProject = getSmartProject();
+        listProjectsView = findViewById(R.id.listProjects);
 
-        // initiate test project if does not exists
-        if (smartProject == null) initiateProject();
+        // restore projects from shared preferences
+        smartProjectList = restoreSharedProjects();
 
-        // draw chart of initiated test project
-        drawChart();
-        setupChart();
+        smartProjectNameList = new ArrayList<>();
 
+        if (smartProjectList == null) {
 
-    }
+            smartProjectList = new ArrayList<>();
 
+            // TODO: delete after implementation of a project creation process
+            SmartProject tempProject = initiateProject();
+            smartProjectList.add(tempProject);
+            smartProjectNameList.add(tempProject.getName());
 
-    public void buttonIncreaseOnClick(View view) {
+            Toast.makeText(this, "There is a lot of space for new projects!\nBe SMART! Goodluck!", Toast.LENGTH_LONG).show();
 
-        smartProject.checkAndFillGaps();
-        smartProject.increaseCurrentProgress();
-        drawChart();
-        setupChart();
-        lineChart.notifyDataSetChanged();
+        } else {
 
-        saveProject();
-
-    }
-
-
-    /**
-     * @return smart project from JSON saved in shared preferences
-     */
-    private SmartProject getSmartProject() {
-
-        String stringJSON = sharedPreferences.getString("smartProject", "");
-
-        ObjectMapper om = new ObjectMapper();
-
-        SmartProject smartProject = null;
-
-        try {
-            smartProject = om.readValue(stringJSON, SmartProject.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return smartProject;
-    }
-
-    /**
-     * Save project instance to shared preferences
-     */
-    private void saveProject() {
-
-        ObjectMapper om = new ObjectMapper();
-
-        try {
-            sharedPreferences.edit().putString("smartProject", om.writeValueAsString(smartProject)).apply();
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Saving problems!", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-
-    /**
-     * Setup chart options
-     */
-    private void setupChart() {
-
-        float textSizeMinorChart = 12f;
-        float textSizeMajorChart = 14f;
-        float textSizeDescription = 20f;
-        float lineWidth = 3f;
-        float circleRadius = 4f;
-        float descriptionXOffset = 150f;
-        float descriptionYOffset = 70f;
-        int fillAlpha = 25;
-        boolean showGridLines = false;
-
-        if (smartProjectMinPaceDataSet != null) {
-            dataSetSetup(smartProjectMinPaceDataSet, R.color.colorMinPace, false, textSizeMinorChart, lineWidth);
-        }
-
-        if (smartProjectMaxPaceDataSet != null) {
-            dataSetSetup(smartProjectMaxPaceDataSet, R.color.colorMaxPace, false, textSizeMinorChart, lineWidth);
-        }
-
-        if (smartProjectCurrentPaceDataSet != null) {
-            dataSetSetup(smartProjectCurrentPaceDataSet, R.color.colorCurrentPace, true, textSizeMajorChart, lineWidth);
-            smartProjectCurrentPaceDataSet.setCircleRadius(circleRadius); //
-            smartProjectCurrentPaceDataSet.setDrawFilled(true); //
-            smartProjectCurrentPaceDataSet.setFillColor(getResources().getColor(R.color.colorCurrentPace)); //
-            smartProjectCurrentPaceDataSet.setFillAlpha(fillAlpha); //
-        }
-
-        // setup X axis
-        XAxis xAxis = lineChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-        xAxis.setAxisMinimum(0f);
-        xAxis.setDrawGridLines(showGridLines);
-
-        // setup Y axis
-        YAxis yAxisLeft = lineChart.getAxisLeft();
-        yAxisLeft.setAxisMinimum(0f);
-        yAxisLeft.setDrawGridLines(showGridLines);
-        yAxisLeft.setDrawGridLinesBehindData(showGridLines);
-
-        YAxis yAxisRight = lineChart.getAxisRight();
-        yAxisRight.setDrawGridLines(showGridLines);
-
-        //*** setup chart description
-        Description chartDescription = new Description();
-        chartDescription.setText(smartProject.getName());
-        chartDescription.setTextSize(textSizeDescription);
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        chartDescription.setPosition(dm.widthPixels - descriptionXOffset, descriptionYOffset);
-        lineChart.setDescription(chartDescription);
-        //***
-
-        // on value selected
-        lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-
-                String xLabel = lineChart.getXAxis().getValueFormatter().getFormattedValue(e.getX(), lineChart.getXAxis());
-
-                Toast.makeText(MainActivity.this,
-                        "Remainder at the end of " + xLabel + ": " + Math.round(e.getY()),
-                        Toast.LENGTH_LONG).show();
-
+            // populate smartProjectNameList
+            for (SmartProject project : smartProjectList) {
+                smartProjectNameList.add(project.getName());
             }
 
+        }
+
+        // setup array adapter and set it to a ListView
+        adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_list_item_1, smartProjectNameList
+        );
+
+        adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
-            public void onNothingSelected() {
+            public void onChanged() {
+
+                // save to shared preferences
+                saveSharedProjects();
+
+                super.onChanged();
+            }
+        });
+
+        listProjectsView.setAdapter(adapter);
+
+        // setting up a list items behaviour on click and long press
+        listProjectsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Toast.makeText(MainActivity.this, "Open project...", Toast.LENGTH_SHORT).show();
+
+                // sending list item position to a new activity
+                openProjectOverviewActivity(position);
 
             }
         });
 
-    }
-
-
-    /**
-     * Setup some dataset options
-     *
-     * @param dataSet LineDataSet for setup
-     * @param color chart color
-     * @param drawValues draw values of chart or not
-     * @param textSize values text size
-     * @param lineWidth width of an chart line
-     */
-    private void dataSetSetup(LineDataSet dataSet, int color, boolean drawValues, float textSize, float lineWidth) {
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        dataSet.setColor(getResources().getColor(color));
-        dataSet.setDrawCircleHole(false);
-        dataSet.setCircleColor(getResources().getColor(color));
-        dataSet.setLineWidth(lineWidth);
-        dataSet.setDrawValues(drawValues);
-        dataSet.setValueTextColor(getResources().getColor(color));
-        dataSet.setValueTextSize(textSize);
-    }
-
-
-    /**
-     * Draw chart from project instance
-     */
-    private void drawChart() {
-
-        smartProject.checkAndFillGaps();
-
-        List<Entry> entriesMinPace = new ArrayList<>();
-        List<Entry> entriesMaxPace = new ArrayList<>();
-        List<Entry> entriesCurrentPace = new ArrayList<>();
-
-        // get float values for X axis
-        float[] xAxisNumbers = smartProject.getFloatNumbersForXAxis();
-
-        // populating of min pace list of entries
-        float[] yAxisMinPaceValues = smartProject.getYAxisChartValuesMinPace();
-        for (int i = 0; i < yAxisMinPaceValues.length; i++) {
-            entriesMinPace.add(new Entry(xAxisNumbers[i], yAxisMinPaceValues[i]));
-        }
-
-        // populating of max pace list of entries
-        float[] yAxisMaxPaceValues = smartProject.getYAxisChartValuesMaxPace();
-        for (int i = 0; i < yAxisMaxPaceValues.length; i++) {
-            entriesMaxPace.add(new Entry(xAxisNumbers[i], yAxisMaxPaceValues[i]));
-        }
-
-        // populating of current pace list of entries
-        float[] yAxisCurrentPaceValues = smartProject.getYAxisChartValuesCurrentPace();
-        for (int i = 0; i < yAxisCurrentPaceValues.length; i++) {
-            entriesCurrentPace.add(new Entry(xAxisNumbers[i], yAxisCurrentPaceValues[i]));
-        }
-
-
-        // creating LineDataSet for both paces
-        smartProjectMinPaceDataSet = new LineDataSet(entriesMinPace, "min pace");
-        smartProjectMaxPaceDataSet = new LineDataSet(entriesMaxPace, "max pace");
-        // setup line data set for current progress
-        smartProjectCurrentPaceDataSet = new LineDataSet(entriesCurrentPace, "current progress");
-
-        // creating a list of IDataSets
-        List<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(smartProjectMinPaceDataSet);
-        dataSets.add(smartProjectMaxPaceDataSet);
-        dataSets.add(smartProjectCurrentPaceDataSet);
-
-        // creating line chart data
-        LineData chartData = new LineData(dataSets);
-
-        // setup labels for X axis
-        XAxis xAxis = lineChart.getXAxis();
-
-        final String[] days = smartProject.getDaysAsStringArray();
-
-        IAxisValueFormatter xAxisFormatter = new IAxisValueFormatter() {
+        listProjectsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return days[(int) value];
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                //TODO: implement deletion of a project
+                return false;
             }
-        };
+        });
 
-        xAxis.setValueFormatter(xAxisFormatter);
-
-        // setup chart data and draw
-        lineChart.setData(chartData);
-        lineChart.invalidate();
 
     }
 
 
-    private void initiateProject() {
+    /**
+     * Open project from projects list in ProjectOverviewActivity
+     *
+     * @param position project's position in projects list
+     */
+    private void openProjectOverviewActivity(int position) {
+
+        Intent intent = new Intent(getApplicationContext(), ProjectOverviewActivity.class);
+        intent.putExtra(PROJECT_ID_STRING_NAME, position);
+        startActivity(intent);
+
+    }
+
+    /**
+     * Save list of project to shared preferences
+     */
+    private void saveSharedProjects() {
+
+        ObjectMapper om = new ObjectMapper();
+
+        try {
+
+            sharedPreferences.edit()
+                    .putString(STRING_TO_SAVE_PROJECT_LIST,
+                            om.writeValueAsString(smartProjectList)).apply();
+
+        } catch (JsonProcessingException e) {
+
+            e.printStackTrace();
+            Log.e("=== ERR >>>", "PROBLEM DURING SAVING SHARED PREFERENCES!");
+
+        }
+
+    }
+
+
+    /**
+     * Restoring saved list of projects from shared preferences
+     *
+     * @return ArrayList of SmartProject
+     */
+    private ArrayList<SmartProject> restoreSharedProjects() {
+
+        String stringProjects = sharedPreferences.getString(STRING_TO_SAVE_PROJECT_LIST, "");
+
+        ArrayList<SmartProject> projects = null;
+
+        try {
+
+            ObjectMapper om = new ObjectMapper();
+
+            CollectionType collectionType = om.getTypeFactory()
+                    .constructCollectionType(ArrayList.class, SmartProject.class);
+
+            projects = om.readValue(stringProjects, collectionType);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            Log.e("=== ERR >>>", "PROBLEM DURING RESTORING PROJECTS FROM SHARED PREFERENCES!");
+
+        }
+
+        return projects;
+    }
+
+
+    // TODO: delete after implementation of a project creation process
+    @Deprecated
+    private SmartProject initiateProject() {
+
+        SmartProject smartProject = null;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
@@ -333,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(f);
         }
 
+        return smartProject;
     }
 
 
