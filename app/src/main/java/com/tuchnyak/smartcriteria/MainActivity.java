@@ -1,6 +1,8 @@
 package com.tuchnyak.smartcriteria;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         smartProjectNameList = new ArrayList<>();
 
-        if (smartProjectList == null) {
+        if (smartProjectList == null || smartProjectList.isEmpty()) {
 
             smartProjectList = new ArrayList<>();
 
@@ -115,8 +117,28 @@ public class MainActivity extends AppCompatActivity {
 
         listProjectsView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                //TODO: implement deletion of a project
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                // call alert and delete project if user agree
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Delete project!")
+                        .setMessage("Are you really want to delete this project?")
+                        .setNegativeButton("Cancel", null)
+                        .setPositiveButton(
+                                "Delete",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        smartProjectList.remove(position);
+                                        smartProjectNameList.remove(position);
+                                        adapter.notifyDataSetChanged();
+
+                                    }
+                                })
+                        .show();
+
                 return false;
             }
         });
