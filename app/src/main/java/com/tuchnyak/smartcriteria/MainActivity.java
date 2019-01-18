@@ -37,14 +37,35 @@ public class MainActivity extends AppCompatActivity {
      * List to keep all projects
      */
     public static List<SmartProject> smartProjectList;
+
+    /**
+     * List to keep and show all projects names
+     */
     public static List<String> smartProjectNameList;
 
+    /**
+     * Adapter for list of projects names
+     */
     public static ArrayAdapter<String> adapter;
 
+    /**
+     * ListView to show all project names and manage them
+     */
     private ListView listProjectsView;
+
+    /**
+     * Shared preferences to store projects permanently
+     */
     private SharedPreferences sharedPreferences;
 
+    /**
+     * String constant to put and get a list of projects with shared preferences
+     */
     private static final String STRING_TO_SAVE_PROJECT_LIST = "projectsList";
+
+    /**
+     * String constant to transmit certain project by id to another activity
+     */
     public static final String PROJECT_ID_STRING_NAME = "projectId";
 
 
