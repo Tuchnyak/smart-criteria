@@ -235,6 +235,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onPause() {
+
+        saveSharedProjects();
+
+        super.onPause();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        saveSharedProjects();
+
+        super.onBackPressed();
+    }
+
     // TODO: delete after implementation of a project creation process
     @Deprecated
     private SmartProject initiateProject() {
