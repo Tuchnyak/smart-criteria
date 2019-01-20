@@ -9,6 +9,9 @@ import android.database.DataSetObserver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -66,7 +69,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      * String constant to transmit certain project by id to another activity
      */
-    public static final String PROJECT_ID_STRING_NAME = "projectId";
+    public static final String PROJECT_ID_TRANSMIT_NAME = "projectId";
+    public static final String COMMAND_TRANSMIT_NAME = "command";
+
+    // command constants for project form activity
+    public static final String COMMAND_CREATE = "create";
+    public static final String COMMAND_EDIT = "edit";
 
 
     @Override
@@ -176,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private void openProjectOverviewActivity(int position) {
 
         Intent intent = new Intent(getApplicationContext(), ProjectOverviewActivity.class);
-        intent.putExtra(PROJECT_ID_STRING_NAME, position);
+        intent.putExtra(PROJECT_ID_TRANSMIT_NAME, position);
         startActivity(intent);
 
     }
@@ -235,6 +243,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Save project on pause
+     */
     @Override
     protected void onPause() {
 
@@ -244,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Save project on back pressed
+     */
     @Override
     public void onBackPressed() {
 
@@ -251,6 +265,62 @@ public class MainActivity extends AppCompatActivity {
 
         super.onBackPressed();
     }
+
+
+    /**
+     * Create menu
+     *
+     * @param menu dot menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()) {
+            case R.id.createNewProjectMenuItem:
+                openFormProject(COMMAND_CREATE);
+                break;
+            case R.id.wikiMenuItem:
+                openWebView();
+                break;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Open project form activity to create new project
+     *
+     * @param command transmitted command for project form activity
+     */
+    private void openFormProject(String command) {
+
+        Intent intent = new Intent(getApplicationContext(), ProjectFormActivity.class);
+        intent.putExtra(COMMAND_TRANSMIT_NAME, command);
+        startActivity(intent);
+
+    }
+
+
+    /**
+     * Openweb view to download Wiki-article
+     */
+    private void openWebView() {
+
+    }
+
 
     // TODO: delete after implementation of a project creation process
     @Deprecated

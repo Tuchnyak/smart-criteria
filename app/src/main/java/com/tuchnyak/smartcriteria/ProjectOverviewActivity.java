@@ -1,8 +1,6 @@
 package com.tuchnyak.smartcriteria;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -10,8 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -26,13 +22,8 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.tuchnyak.smartcriteria.entity.SmartProject;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ProjectOverviewActivity extends AppCompatActivity {
 
@@ -56,7 +47,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        projectId = intent.getIntExtra(MainActivity.PROJECT_ID_STRING_NAME, -1);
+        projectId = intent.getIntExtra(MainActivity.PROJECT_ID_TRANSMIT_NAME, -1);
 
         if (projectId != -1) {
 

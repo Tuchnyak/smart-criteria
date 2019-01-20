@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Class for project describing.<br>
  * Lists hold units in decreasing amounts for burnout charts.<br>
  * <i><b>Attention!</b> An object of this class stores raw double and float values!
- * Handle it outside for beautiful and human-friendly charts.<br>
+ * Handle it outside for beautiful and human-friendly charts if needed.<br>
  * For example:<br>
  * unitsPerDayMinPace = 3.451<br>
  * entry for may 24th could stores: 18.42</i>

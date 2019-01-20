@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/createNewProjectMenuItem"
+        android:title="New SMART project" />
+    <item
+        android:id="@+id/wikiMenuItem"
+        android:title="SMART criteria on Wiki" />
+</menu>
