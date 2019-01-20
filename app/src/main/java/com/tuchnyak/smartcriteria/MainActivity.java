@@ -283,6 +283,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Managing actions by clicked menu
+     * @param item clicked menu item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
@@ -297,6 +302,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+
+    /**
+     * Action by floating button
+     * @param view clicked screen item
+     */
+    public void createNewProject(View view) {
+
+        openFormProject(COMMAND_CREATE);
+
     }
 
 
