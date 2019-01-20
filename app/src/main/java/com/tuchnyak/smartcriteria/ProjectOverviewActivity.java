@@ -265,4 +265,18 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Opening MainActivity instead of simple back to a saved instance
+     * in order to update progress percentage
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+
+    }
+
+
 }

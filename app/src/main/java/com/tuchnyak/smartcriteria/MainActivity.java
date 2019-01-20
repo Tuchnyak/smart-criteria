@@ -107,8 +107,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             // populate smartProjectNameList
+            int i = 0;
             for (SmartProject project : smartProjectList) {
-                smartProjectNameList.add(project.getName());
+
+                StringBuilder sb = new StringBuilder();
+
+                sb.append(project.getName()).append(": ");
+
+                SmartProject tempProject = smartProjectList.get(i);
+                int percentageOfDone = (int) tempProject.getCurrentProgress() * 100 / tempProject.getUnitsTotal();
+
+                sb.append(percentageOfDone).append("%");
+
+                smartProjectNameList.add(sb.toString());
+
+                i++;
             }
 
         }
