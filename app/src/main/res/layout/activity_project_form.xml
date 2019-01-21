@@ -331,6 +331,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="0dp"
             android:background="@color/colorPrimaryDark"
+            android:onClick="createNewProject"
             android:text="Create New Project"
             android:textColor="#FFFFFF" />
 
