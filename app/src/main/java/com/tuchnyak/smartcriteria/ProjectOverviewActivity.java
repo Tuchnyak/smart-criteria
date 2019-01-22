@@ -5,7 +5,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -22,8 +29,10 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.tuchnyak.smartcriteria.entity.SmartProject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ProjectOverviewActivity extends AppCompatActivity {
 
@@ -32,6 +41,9 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     private LineDataSet smartProjectMinPaceDataSet;
     private LineDataSet smartProjectMaxPaceDataSet;
     private LineDataSet smartProjectCurrentPaceDataSet;
+
+    private TextView textViewProjectName;
+    private ImageButton buttonTextInfo;
 
     // field to operate with project that has been gotten
     private SmartProject smartProject;
@@ -45,6 +57,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_overview);
 
+        getSupportActionBar().hide();
 
         Intent intent = getIntent();
         projectId = intent.getIntExtra(MainActivity.PROJECT_ID_TRANSMIT_NAME, -1);
@@ -63,6 +76,11 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         // line chart initialization
         lineChart = findViewById(R.id.lineChart);
+
+        textViewProjectName = findViewById(R.id.textViewProjectName);
+        textViewProjectName.setText(smartProject.getName());
+
+        buttonTextInfo = findViewById(R.id.buttonTextInfo);
 
         // draw chart of initiated test project
         drawChart();
@@ -94,6 +112,50 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     }
 
 
+    public void showTextInfo(View view) {
+
+        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()
+                .getSystemService(LAYOUT_INFLATER_SERVICE);
+
+        View popupView = layoutInflater.inflate(R.layout.project_text_info_popup, null);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        ProjectOverviewActivity.this.getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+//        final PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final PopupWindow popupWindow = new PopupWindow(popupView, dm.widthPixels - 200, dm.heightPixels - 300);
+
+        Button buttonDismiss = popupView.findViewById(R.id.buttonDismiss);
+        buttonDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        TextView textViewProjectInfo = popupView.findViewById(R.id.textViewProjectInfo);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-YYYY", Locale.getDefault());
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(smartProject.getName()).append("\n\n");
+        sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
+        sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
+        sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n\n");
+        sb.append("Minimum pace:").append("\n");
+        sb.append("units per day: ").append(Math.round(smartProject.getUnitsPerDayMinPace())).append("\n");
+        sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMinPace())).append("\n\n");
+        sb.append("Maximum pace:").append("\n");
+        sb.append("units per day: ").append(Math.round(smartProject.getUnitsPerDayMaxPace())).append("\n");
+        sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMaxPace())).append("\n");
+
+        textViewProjectInfo.setText(sb.toString());
+
+        popupWindow.showAtLocation(lineChart, Gravity.CENTER, 0, 0);
+
+    }
+
+
     /**
      * Setup chart options
      */
@@ -105,7 +167,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         float lineWidth = 3f;
         float circleRadius = 4f;
         float descriptionXOffset = 150f;
-        float descriptionYOffset = 70f;
+        float descriptionYOffset = 110f;
         int fillAlpha = 25;
         boolean showGridLines = false;
 
@@ -142,15 +204,15 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         yAxisRight.setDrawGridLines(showGridLines);
 
         //*** setup chart description
-        Description chartDescription = new Description();
-        chartDescription.setText(smartProject.getName());
-        chartDescription.setTextSize(textSizeDescription);
+//        Description chartDescription = new Description();
+//        chartDescription.setText(smartProject.getName());
+//        chartDescription.setTextSize(textSizeDescription);
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        chartDescription.setPosition(dm.widthPixels - descriptionXOffset, descriptionYOffset);
-        lineChart.setDescription(chartDescription);
+//        DisplayMetrics dm = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(dm);
+//
+//        chartDescription.setPosition(dm.widthPixels - descriptionXOffset, descriptionYOffset);
+//        lineChart.setDescription(chartDescription);
         //***
 
         // on value selected
@@ -259,6 +321,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         xAxis.setValueFormatter(xAxisFormatter);
 
         // setup chart data and draw
+        lineChart.setMaxHighlightDistance(50f);
         lineChart.setData(chartData);
         lineChart.invalidate();
 
