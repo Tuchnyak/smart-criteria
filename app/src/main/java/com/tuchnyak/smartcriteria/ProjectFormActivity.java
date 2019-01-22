@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuchnyak.smartcriteria.entity.SmartProject;
@@ -82,36 +84,142 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     public void createNewProject(View view) {
 
-        if (command.equals(MainActivity.COMMAND_CREATE)) {
+        if (validateInput()) {
 
-            String name = editTextProjectName.getText().toString();
-            String description = editTextProjectDescription.getText().toString();
-            int unitsTotal = Integer.parseInt(editTextUnitsAmount.getText().toString());
+            if (command.equals(MainActivity.COMMAND_CREATE)) {
 
-            if (isPaceMode) {
+                String name = editTextProjectName.getText().toString();
+                String description = editTextProjectDescription.getText().toString();
+                int unitsTotal = Integer.parseInt(editTextUnitsAmount.getText().toString());
 
-                double unitsPerDayMinPace = Double.parseDouble(editTextUnitsPerDayMinPace.getText().toString());
-                double unitsPerDayMaxPace = Double.parseDouble(editTextUnitsPerDayMaxPace.getText().toString());
-                formProject = new SmartProject(name, description, unitsTotal, startDay, unitsPerDayMinPace, unitsPerDayMaxPace);
+                if (isPaceMode) {
+
+                    double unitsPerDayMinPace = Double.parseDouble(editTextUnitsPerDayMinPace.getText().toString());
+                    double unitsPerDayMaxPace = Double.parseDouble(editTextUnitsPerDayMaxPace.getText().toString());
+                    formProject = new SmartProject(name, description, unitsTotal, startDay, unitsPerDayMinPace, unitsPerDayMaxPace);
+
+                } else {
+
+                    formProject = new SmartProject(name, description, unitsTotal, startDay, deadlineMinPaceDate, deadlineMaxPaceDate);
+
+                }
+
+                Intent intent = new Intent(getApplicationContext(), ProjectOverviewActivity.class);
+                intent.putExtra(MainActivity.PROJECT_ID_TRANSMIT_NAME, MainActivity.smartProjectList.size());
+
+                MainActivity.smartProjectList.add(formProject);
+                MainActivity.adapter.notifyDataSetChanged();
+
+                startActivity(intent);
 
             } else {
-
-                formProject = new SmartProject(name, description, unitsTotal, startDay, deadlineMinPaceDate, deadlineMaxPaceDate);
-
+                // TODO CREATE MODE
             }
 
-            Intent intent = new Intent(getApplicationContext(), ProjectOverviewActivity.class);
-            intent.putExtra(MainActivity.PROJECT_ID_TRANSMIT_NAME, MainActivity.smartProjectList.size());
-
-            MainActivity.smartProjectList.add(formProject);
-            MainActivity.adapter.notifyDataSetChanged();
-
-            startActivity(intent);
-
-        } else {
-            // TODO CREATE MODE
         }
 
+    }
+
+
+    private boolean validateInput() {
+
+        int titleLimit = 30;
+        int descriptionLimit = 280;
+
+        // validate name
+        if (editTextProjectName.getText().toString().trim().isEmpty()) {
+            editTextProjectName.setError("Field can't be empty");
+            return false;
+        } else if (editTextProjectName.getText().toString().trim().length() > titleLimit) {
+            editTextProjectName.setError("Title length should be less than or equals " + titleLimit + " characters");
+            return false;
+        } else {
+            editTextProjectName.setError(null);
+        }
+
+        // validate total units amount
+        if (editTextUnitsAmount.getText().toString().trim().isEmpty()) {
+            editTextUnitsAmount.setError("Field can't be empty");
+            return false;
+        } else {
+            editTextUnitsAmount.setError(null);
+        }
+
+        // validate description
+        if (editTextProjectDescription.getText().toString().trim().isEmpty()) {
+            editTextProjectDescription.setError("Field can't be empty");
+            return false;
+        } else if (editTextProjectDescription.getText().toString().trim().length() > descriptionLimit) {
+            editTextProjectDescription.setError("Description length should be less than or equals " + descriptionLimit + " characters");
+            return false;
+        } else {
+            editTextProjectDescription.setError(null);
+        }
+
+        // validate start day
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        Date tempToday = c.getTime();
+        if (editTextStartDay.getText().toString().trim().isEmpty()) {
+            editTextStartDay.setError("Field can't be empty");
+            return false;
+        } else if (startDay.before(tempToday)) {
+            editTextStartDay.setError("Start day should be today or in the future");
+            return false;
+        } else {
+            editTextStartDay.setError(null);
+        }
+
+        if (!isPaceMode) {
+            // validate deadline days min pace
+            if (editTextDeadlineMinPace.getText().toString().trim().isEmpty()) {
+                editTextDeadlineMinPace.setError("Field can't be empty");
+                return false;
+            } else if (deadlineMinPaceDate.before(startDay) || deadlineMinPaceDate.equals(startDay)) {
+                editTextDeadlineMinPace.setError("Deadline day with min pace should be AFTER Start day");
+                return false;
+            } else {
+                editTextDeadlineMinPace.setError(null);
+            }
+
+            // validate deadline days max pace
+            if (editTextDeadlineMaxPace.getText().toString().trim().isEmpty()) {
+                editTextDeadlineMaxPace.setError("Field can't be empty");
+                return false;
+            } else if (!deadlineMaxPaceDate.after(startDay) || !deadlineMaxPaceDate.before(deadlineMinPaceDate)) {
+                editTextDeadlineMaxPace.setError("Deadline day with max pace should be After Start day AND BEFORE Deadline with min pace");
+                return false;
+            } else {
+                editTextDeadlineMaxPace.setError(null);
+            }
+
+        } else {
+            // validate pace values min pace
+            if (editTextUnitsPerDayMinPace.getText().toString().trim().isEmpty()) {
+                editTextUnitsPerDayMinPace.setError("Field can't be empty");
+                return false;
+            } else if (!editTextUnitsPerDayMaxPace.getText().toString().isEmpty()
+                    && Integer.parseInt(editTextUnitsPerDayMaxPace.getText().toString()) <= Integer.parseInt(editTextUnitsPerDayMinPace.getText().toString())) {
+                editTextUnitsPerDayMinPace.setError("Should be less than max pace per day");
+                return false;
+            } else {
+                editTextUnitsPerDayMinPace.setError(null);
+            }
+
+            // validate pace values max pace
+            if (editTextUnitsPerDayMaxPace.getText().toString().trim().isEmpty()) {
+                editTextUnitsPerDayMaxPace.setError("Field can't be empty");
+                return false;
+            } else {
+                editTextUnitsPerDayMaxPace.setError(null);
+            }
+
+        }
+
+        return true;
     }
 
 
@@ -176,6 +284,7 @@ public class ProjectFormActivity extends AppCompatActivity {
         editTextProjectDescription = findViewById(R.id.editTextProjectDescription);
 
         editTextStartDay = findViewById(R.id.editTextStartDay);
+        editTextStartDay.setInputType(InputType.TYPE_NULL);
         buttonStartDayPicker = findViewById(R.id.buttonStartDayPicker);
 
         radioGroupDeadlinePace = findViewById(R.id.radioGroupDeadlinePace);
@@ -187,9 +296,11 @@ public class ProjectFormActivity extends AppCompatActivity {
         verticalLayoutPace.setVisibility(View.GONE);
 
         editTextDeadlineMinPace = findViewById(R.id.editTextDeadlineMinPace);
+        editTextDeadlineMinPace.setInputType(InputType.TYPE_NULL);
         buttonDeadlineMinPaceDatePicker = findViewById(R.id.buttonDeadlineMinPaceDatePicker);
 
         editTextDeadlineMaxPace = findViewById(R.id.editTextDeadlineMaxPace);
+        editTextDeadlineMaxPace.setInputType(InputType.TYPE_NULL);
         buttonDeadlineMaxPaceDatePicker = findViewById(R.id.buttonDeadlineMaxPaceDatePicker);
 
         editTextUnitsPerDayMinPace = findViewById(R.id.editTextUnitsPerDayMinPace);
@@ -212,6 +323,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             verticalLayoutDeadline.setVisibility(View.VISIBLE);
             verticalLayoutPace.setVisibility(View.GONE);
 
+            editTextUnitsPerDayMinPace.getText().clear();
+            editTextUnitsPerDayMaxPace.getText().clear();
+
             params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutDeadline);
             buttonCreateProject.setLayoutParams(params);
 
@@ -221,6 +335,9 @@ public class ProjectFormActivity extends AppCompatActivity {
 
             verticalLayoutDeadline.setVisibility(View.GONE);
             verticalLayoutPace.setVisibility(View.VISIBLE);
+
+            editTextDeadlineMinPace.getText().clear();
+            editTextDeadlineMaxPace.getText().clear();
 
             params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutPace);
             buttonCreateProject.setLayoutParams(params);
