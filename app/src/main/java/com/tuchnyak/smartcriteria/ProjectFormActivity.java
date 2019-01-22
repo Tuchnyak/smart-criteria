@@ -308,47 +308,49 @@ public class ProjectFormActivity extends AppCompatActivity {
 
         buttonCreateProject = findViewById(R.id.buttonCreateProject);
 
-    }
+        radioGroupDeadlinePace.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
+                RelativeLayout.LayoutParams params = new RelativeLayout
+                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-    public void radioClick(View view) {
+                if (radioButtonDeadline.isChecked()) {
 
-        RelativeLayout.LayoutParams params = new RelativeLayout
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    isPaceMode = false;
 
-        if (view.getTag().equals("radio_dead")) {
+                    verticalLayoutDeadline.setVisibility(View.VISIBLE);
+                    verticalLayoutPace.setVisibility(View.GONE);
 
-            isPaceMode = false;
+                    editTextUnitsPerDayMinPace.getText().clear();
+                    editTextUnitsPerDayMaxPace.getText().clear();
 
-            verticalLayoutDeadline.setVisibility(View.VISIBLE);
-            verticalLayoutPace.setVisibility(View.GONE);
+                    params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutDeadline);
+                    buttonCreateProject.setLayoutParams(params);
 
-            editTextUnitsPerDayMinPace.getText().clear();
-            editTextUnitsPerDayMaxPace.getText().clear();
+                } else if (radioButtonPace.isChecked()) {
 
-            params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutDeadline);
-            buttonCreateProject.setLayoutParams(params);
+                    isPaceMode = true;
 
-        } else if (view.getTag().equals("radio_pace")) {
+                    verticalLayoutDeadline.setVisibility(View.GONE);
+                    verticalLayoutPace.setVisibility(View.VISIBLE);
 
-            isPaceMode = true;
+                    editTextDeadlineMinPace.getText().clear();
+                    editTextDeadlineMaxPace.getText().clear();
 
-            verticalLayoutDeadline.setVisibility(View.GONE);
-            verticalLayoutPace.setVisibility(View.VISIBLE);
+                    params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutPace);
+                    buttonCreateProject.setLayoutParams(params);
 
-            editTextDeadlineMinPace.getText().clear();
-            editTextDeadlineMaxPace.getText().clear();
+                } else {
 
-            params.addRule(RelativeLayout.BELOW, R.id.verticalLayoutPace);
-            buttonCreateProject.setLayoutParams(params);
+                    String msg = "Something gone wrong with radio buttons";
+                    Toast.makeText(ProjectFormActivity.this, msg, Toast.LENGTH_LONG).show();
+                    Log.e("=== ERR >>>", msg);
 
-        } else {
+                }
 
-            String msg = "Something gone wrong with radio buttons";
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-            Log.e("=== ERR >>>", msg);
-
-        }
+            }
+        });
 
     }
 
