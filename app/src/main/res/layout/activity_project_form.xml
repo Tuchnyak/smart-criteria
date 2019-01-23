@@ -20,7 +20,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="0dp"
             android:text="Project title:"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/editTextProjectName"
@@ -45,7 +45,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="10dp"
             android:text="Units:"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/editTextUnitsAmount"
@@ -72,7 +72,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="5dp"
             android:text="Description:"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <EditText
             android:id="@+id/editTextProjectDescription"
@@ -97,7 +97,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginTop="15dp"
             android:text="Start Day:"
-            android:textSize="23sp" />
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/buttonStartDayPicker"
@@ -176,7 +176,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Min pace:"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextDeadlineMinPace"
@@ -216,7 +216,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Max pace:"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextDeadlineMaxPace"
@@ -268,7 +268,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Units min pace:"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextUnitsPerDayMinPace"
@@ -294,7 +294,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:text="Units max pace:"
-                    android:textSize="23sp" />
+                    android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextUnitsPerDayMaxPace"
@@ -319,7 +319,8 @@
             android:background="@color/colorPrimaryDark"
             android:onClick="createNewProject"
             android:text="Create New Project"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
 
     </RelativeLayout>
 
