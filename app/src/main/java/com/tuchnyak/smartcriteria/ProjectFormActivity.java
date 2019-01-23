@@ -293,6 +293,8 @@ public class ProjectFormActivity extends AppCompatActivity {
 
         editTextStartDay = findViewById(R.id.editTextStartDay);
         editTextStartDay.setInputType(InputType.TYPE_NULL);
+        editTextStartDay.setKeyListener(null);
+
         buttonStartDayPicker = findViewById(R.id.buttonStartDayPicker);
 
         radioGroupDeadlinePace = findViewById(R.id.radioGroupDeadlinePace);
@@ -305,10 +307,14 @@ public class ProjectFormActivity extends AppCompatActivity {
 
         editTextDeadlineMinPace = findViewById(R.id.editTextDeadlineMinPace);
         editTextDeadlineMinPace.setInputType(InputType.TYPE_NULL);
+        editTextDeadlineMinPace.setKeyListener(null);
+
         buttonDeadlineMinPaceDatePicker = findViewById(R.id.buttonDeadlineMinPaceDatePicker);
 
         editTextDeadlineMaxPace = findViewById(R.id.editTextDeadlineMaxPace);
         editTextDeadlineMaxPace.setInputType(InputType.TYPE_NULL);
+        editTextDeadlineMaxPace.setKeyListener(null);
+
         buttonDeadlineMaxPaceDatePicker = findViewById(R.id.buttonDeadlineMaxPaceDatePicker);
 
         editTextUnitsPerDayMinPace = findViewById(R.id.editTextUnitsPerDayMinPace);

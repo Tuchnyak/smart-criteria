@@ -125,7 +125,6 @@
             android:cursorVisible="false"
             android:ems="10"
             android:gravity="center"
-            android:inputType="date"
             android:textSize="20sp" />
 
         <RadioGroup
