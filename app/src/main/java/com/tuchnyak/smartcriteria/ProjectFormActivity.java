@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tuchnyak.smartcriteria.entity.SmartProject;
@@ -30,7 +29,7 @@ import java.util.Locale;
 public class ProjectFormActivity extends AppCompatActivity {
 
     private EditText editTextProjectName;
-    private EditText editTextUnitsAmount;
+    private EditText editTextUnitsTotalAmount;
     private EditText editTextProjectDescription;
 
     private EditText editTextStartDay;
@@ -90,7 +89,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
                 String name = editTextProjectName.getText().toString();
                 String description = editTextProjectDescription.getText().toString();
-                int unitsTotal = Integer.parseInt(editTextUnitsAmount.getText().toString());
+                int unitsTotal = Integer.parseInt(editTextUnitsTotalAmount.getText().toString());
 
                 if (isPaceMode) {
 
@@ -138,11 +137,14 @@ public class ProjectFormActivity extends AppCompatActivity {
         }
 
         // validate total units amount
-        if (editTextUnitsAmount.getText().toString().trim().isEmpty()) {
-            editTextUnitsAmount.setError("Field can't be empty");
+        if (editTextUnitsTotalAmount.getText().toString().trim().isEmpty()) {
+            editTextUnitsTotalAmount.setError("Field can't be empty");
+            return false;
+        } else if (Long.parseLong(editTextUnitsTotalAmount.getText().toString()) >= Integer.MAX_VALUE) {
+            editTextUnitsTotalAmount.setError("Value should be less than 2147483647");
             return false;
         } else {
-            editTextUnitsAmount.setError(null);
+            editTextUnitsTotalAmount.setError(null);
         }
 
         // validate description
@@ -190,7 +192,7 @@ public class ProjectFormActivity extends AppCompatActivity {
                 editTextDeadlineMaxPace.setError("Field can't be empty");
                 return false;
             } else if (!deadlineMaxPaceDate.after(startDay) || !deadlineMaxPaceDate.before(deadlineMinPaceDate)) {
-                editTextDeadlineMaxPace.setError("Deadline day with max pace should be After Start day AND BEFORE Deadline with min pace");
+                editTextDeadlineMaxPace.setError("Deadline day with max pace should be AFTER Start day AND BEFORE Deadline with min pace");
                 return false;
             } else {
                 editTextDeadlineMaxPace.setError(null);
@@ -200,6 +202,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             // validate pace values min pace
             if (editTextUnitsPerDayMinPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMinPace.setError("Field can't be empty");
+                return false;
+            } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) >= Integer.MAX_VALUE) {
+                editTextUnitsPerDayMinPace.setError("Value should be less than 2147483647");
                 return false;
             } else if (!editTextUnitsPerDayMaxPace.getText().toString().isEmpty()
                     && Integer.parseInt(editTextUnitsPerDayMaxPace.getText().toString()) <= Integer.parseInt(editTextUnitsPerDayMinPace.getText().toString())) {
@@ -212,6 +217,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             // validate pace values max pace
             if (editTextUnitsPerDayMaxPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMaxPace.setError("Field can't be empty");
+                return false;
+            } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) >= Integer.MAX_VALUE) {
+                editTextUnitsPerDayMaxPace.setError("Value should be less than 2147483647");
                 return false;
             } else {
                 editTextUnitsPerDayMaxPace.setError(null);
@@ -247,7 +255,7 @@ public class ProjectFormActivity extends AppCompatActivity {
                         calendar.set(Calendar.MONTH, month);
                         calendar.set(Calendar.YEAR, year);
 
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY", Locale.getDefault());
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
                         switch (tag) {
                             case "date_picker_start":
@@ -280,7 +288,7 @@ public class ProjectFormActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         editTextProjectName = findViewById(R.id.editTextProjectName);
-        editTextUnitsAmount = findViewById(R.id.editTextUnitsAmount);
+        editTextUnitsTotalAmount = findViewById(R.id.editTextUnitsAmount);
         editTextProjectDescription = findViewById(R.id.editTextProjectDescription);
 
         editTextStartDay = findViewById(R.id.editTextStartDay);

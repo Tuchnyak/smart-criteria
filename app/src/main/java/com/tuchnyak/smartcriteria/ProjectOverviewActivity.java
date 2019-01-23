@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -123,7 +121,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         ProjectOverviewActivity.this.getWindowManager().getDefaultDisplay().getMetrics(dm);
 
 //        final PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final PopupWindow popupWindow = new PopupWindow(popupView, dm.widthPixels - 200, dm.heightPixels - 300);
+        final PopupWindow popupWindow = new PopupWindow(popupView, dm.widthPixels - 100, dm.heightPixels - 300);
 
         Button buttonDismiss = popupView.findViewById(R.id.buttonDismiss);
         buttonDismiss.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +133,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         TextView textViewProjectInfo = popupView.findViewById(R.id.textViewProjectInfo);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-YYYY", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
 
         StringBuilder sb = new StringBuilder();
         sb.append(smartProject.getName()).append("\n\n");
@@ -163,11 +161,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         float textSizeMinorChart = 12f;
         float textSizeMajorChart = 14f;
-        float textSizeDescription = 20f;
         float lineWidth = 3f;
         float circleRadius = 4f;
-        float descriptionXOffset = 150f;
-        float descriptionYOffset = 110f;
         int fillAlpha = 25;
         boolean showGridLines = false;
 
@@ -203,17 +198,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         YAxis yAxisRight = lineChart.getAxisRight();
         yAxisRight.setDrawGridLines(showGridLines);
 
-        //*** setup chart description
-//        Description chartDescription = new Description();
-//        chartDescription.setText(smartProject.getName());
-//        chartDescription.setTextSize(textSizeDescription);
-
-//        DisplayMetrics dm = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(dm);
-//
-//        chartDescription.setPosition(dm.widthPixels - descriptionXOffset, descriptionYOffset);
-//        lineChart.setDescription(chartDescription);
-        //***
+        lineChart.getLegend().setTextSize(16f);
+        lineChart.setDescription(null);
 
         // on value selected
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -223,7 +209,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
                 String xLabel = lineChart.getXAxis().getValueFormatter().getFormattedValue(e.getX(), lineChart.getXAxis());
 
                 Toast.makeText(ProjectOverviewActivity.this,
-                        "Remainder at the end of " + xLabel + ": " + Math.round(e.getY()),
+                        xLabel + ": " + Math.round(e.getY()) + " units",
                         Toast.LENGTH_LONG).show();
 
             }
