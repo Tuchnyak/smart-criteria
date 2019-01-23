@@ -140,6 +140,9 @@ public class ProjectFormActivity extends AppCompatActivity {
         if (editTextUnitsTotalAmount.getText().toString().trim().isEmpty()) {
             editTextUnitsTotalAmount.setError("Field can't be empty");
             return false;
+        } else if (editTextUnitsTotalAmount.getText().toString().trim().length() > 10) {
+            editTextUnitsTotalAmount.setError("String length should be no more than 10 characters");
+            return false;
         } else if (Long.parseLong(editTextUnitsTotalAmount.getText().toString()) >= Integer.MAX_VALUE) {
             editTextUnitsTotalAmount.setError("Value should be less than 2147483647");
             return false;
@@ -165,7 +168,7 @@ public class ProjectFormActivity extends AppCompatActivity {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
         Date tempToday = c.getTime();
-        if (editTextStartDay.getText().toString().trim().isEmpty()) {
+        if (editTextStartDay.getText().toString().trim().isEmpty() || startDay == null) {
             editTextStartDay.setError("Field can't be empty");
             return false;
         } else if (startDay.before(tempToday)) {
@@ -177,7 +180,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
         if (!isPaceMode) {
             // validate deadline days min pace
-            if (editTextDeadlineMinPace.getText().toString().trim().isEmpty()) {
+            if (editTextDeadlineMinPace.getText().toString().trim().isEmpty() || deadlineMinPaceDate == null) {
                 editTextDeadlineMinPace.setError("Field can't be empty");
                 return false;
             } else if (deadlineMinPaceDate.before(startDay) || deadlineMinPaceDate.equals(startDay)) {
@@ -188,7 +191,7 @@ public class ProjectFormActivity extends AppCompatActivity {
             }
 
             // validate deadline days max pace
-            if (editTextDeadlineMaxPace.getText().toString().trim().isEmpty()) {
+            if (editTextDeadlineMaxPace.getText().toString().trim().isEmpty() || deadlineMinPaceDate == null) {
                 editTextDeadlineMaxPace.setError("Field can't be empty");
                 return false;
             } else if (!deadlineMaxPaceDate.after(startDay) || !deadlineMaxPaceDate.before(deadlineMinPaceDate)) {
@@ -202,6 +205,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             // validate pace values min pace
             if (editTextUnitsPerDayMinPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMinPace.setError("Field can't be empty");
+                return false;
+            } else if (editTextUnitsPerDayMinPace.getText().toString().trim().length() > 10) {
+                editTextUnitsPerDayMinPace.setError("String length should be no more than 10 characters");
                 return false;
             } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) >= Integer.MAX_VALUE) {
                 editTextUnitsPerDayMinPace.setError("Value should be less than 2147483647");
@@ -217,6 +223,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             // validate pace values max pace
             if (editTextUnitsPerDayMaxPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMaxPace.setError("Field can't be empty");
+                return false;
+            } else if (editTextUnitsPerDayMaxPace.getText().toString().trim().length() > 10) {
+                editTextUnitsPerDayMaxPace.setError("String length should be no more than 10 characters");
                 return false;
             } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) >= Integer.MAX_VALUE) {
                 editTextUnitsPerDayMaxPace.setError("Value should be less than 2147483647");

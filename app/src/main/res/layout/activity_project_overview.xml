@@ -50,8 +50,9 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="45dp"
-        android:background="@color/design_default_color_primary"
+        android:background="@color/colorPrimary"
         android:onClick="showTextInfo"
-        app:srcCompat="@drawable/ic_folder_white_48x48" />
+        android:padding="2dp"
+        app:srcCompat="@drawable/ic_notepad_white_48x48" />
 
 </RelativeLayout>

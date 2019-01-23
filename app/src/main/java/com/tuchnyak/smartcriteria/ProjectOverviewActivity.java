@@ -120,7 +120,6 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         DisplayMetrics dm = new DisplayMetrics();
         ProjectOverviewActivity.this.getWindowManager().getDefaultDisplay().getMetrics(dm);
 
-//        final PopupWindow popupWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final PopupWindow popupWindow = new PopupWindow(popupView, dm.widthPixels - 100, dm.heightPixels - 300);
 
         Button buttonDismiss = popupView.findViewById(R.id.buttonDismiss);
@@ -135,8 +134,10 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
 
+        int percentage = (int) (smartProject.getCurrentProgress() * 100 / smartProject.getUnitsTotal());
+
         StringBuilder sb = new StringBuilder();
-        sb.append(smartProject.getName()).append("\n\n");
+        sb.append(smartProject.getName()).append(" : ").append(Integer.valueOf(percentage)).append("%\n\n");
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
         sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
         sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n\n");

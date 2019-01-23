@@ -2,15 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/popupBackground"
+    android:background="@drawable/rectangle_circle_corner"
     android:gravity="center"
     android:orientation="vertical">
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:background="@color/popupBackground">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -28,6 +26,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
                 android:text="textViewProjectInfo"
+                android:textColor="@color/darkGray"
                 android:textSize="18sp" />
 
             <Button

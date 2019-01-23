@@ -6,5 +6,6 @@
     <color name="colorMinPace">#00CBFF</color>
     <color name="colorMaxPace">#FF5400</color>
     <color name="colorCurrentPace">#000000</color>
-    <color name="popupBackground">#EEEEEE</color>
+    <color name="lightGray">#D3D3D3</color>
+    <color name="darkGray">#5A5A5A</color>
 </resources>
