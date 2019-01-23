@@ -164,9 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 // call alert and delete project if user agree
                 new AlertDialog.Builder(MainActivity.this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Delete project!")
+                        .setTitle("Delete project?")
                         .setMessage("Are you really want to delete this project?")
-                        .setNegativeButton("Cancel", null)
                         .setPositiveButton(
                                 "Delete",
                                 new DialogInterface.OnClickListener() {
@@ -179,9 +178,10 @@ public class MainActivity extends AppCompatActivity {
 
                                     }
                                 })
+                        .setNegativeButton("Cancel", null)
                         .show();
 
-                return false;
+                return true;
             }
         });
 

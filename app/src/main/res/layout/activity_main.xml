@@ -9,7 +9,9 @@
     <ListView
         android:id="@+id/listProjects"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/buttonCreateNewProject"
@@ -21,6 +23,7 @@
         android:layout_marginBottom="40dp"
         android:clickable="true"
         android:focusable="true"
+        android:longClickable="true"
         android:onClick="createNewProject"
         app:srcCompat="@android:drawable/ic_input_add" />
 
