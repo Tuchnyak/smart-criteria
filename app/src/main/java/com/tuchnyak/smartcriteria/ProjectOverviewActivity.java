@@ -218,6 +218,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         YAxis yAxisRight = lineChart.getAxisRight();
         yAxisRight.setDrawGridLines(showGridLines);
+        yAxisRight.setAxisMinimum(0f);
 
         lineChart.getLegend().setTextSize(16f);
         lineChart.setDescription(null);
