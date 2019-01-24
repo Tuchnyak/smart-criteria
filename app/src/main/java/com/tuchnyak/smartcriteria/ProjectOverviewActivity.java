@@ -1,6 +1,8 @@
 package com.tuchnyak.smartcriteria;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -43,6 +45,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
     private TextView textViewProjectName;
     private ImageButton buttonTextInfo;
+    private Vibrator vibrator;
 
     // field to operate with project that has been gotten
     private SmartProject smartProject;
@@ -85,6 +88,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         drawChart();
         setupChart();
 
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
     }
 
 
@@ -95,6 +100,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         drawChart();
         setupChart();
         lineChart.notifyDataSetChanged();
+
+        vibrator.vibrate(30);
 
         saveProject();
 
@@ -338,6 +345,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+
+        vibrator.cancel();
 
     }
 
