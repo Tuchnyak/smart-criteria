@@ -289,7 +289,7 @@ public class SmartProject {
     /**
      * @return today Date() with time: 0 hours, 0 minutes, 0 seconds and 0 milliseconds.
      */
-    private Date getTodayOfMidnight() {
+    public static Date getTodayOfMidnight() {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);

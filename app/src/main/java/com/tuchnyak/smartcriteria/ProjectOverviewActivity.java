@@ -29,6 +29,7 @@ import com.tuchnyak.smartcriteria.entity.SmartProject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -136,9 +137,21 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         int percentage = (int) (smartProject.getCurrentProgress() * 100 / smartProject.getUnitsTotal());
 
+        int progressToday = 0;
+
+        if (smartProject.getEntriesCurrentPace().size() <= 1) {
+            progressToday = (int) smartProject.getCurrentProgress();
+        } else if (smartProject.getEntriesCurrentPace() != null) {
+            Date[] keys = smartProject.getEntriesCurrentPace().keySet().toArray(new Date[0]);
+            if (keys != null && keys.length >= 2)
+                progressToday = (int) (smartProject.getEntriesCurrentPace().get(keys[keys.length - 2])
+                        - smartProject.getEntriesCurrentPace().get(keys[keys.length - 1]));
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append(smartProject.getName()).append(" : ").append(Integer.valueOf(percentage)).append("%\n\n");
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
+        sb.append("Today's progress: ").append(progressToday).append("\n");
         sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
         sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n\n");
         sb.append("Minimum pace:").append("\n");

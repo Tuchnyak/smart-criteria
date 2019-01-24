@@ -122,7 +122,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     private boolean validateInput() {
 
-        int titleLimit = 30;
+        int titleLimit = 70;
         int descriptionLimit = 280;
 
         // validate name
