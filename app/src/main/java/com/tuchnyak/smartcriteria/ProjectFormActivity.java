@@ -87,8 +87,8 @@ public class ProjectFormActivity extends AppCompatActivity {
 
             if (command.equals(MainActivity.COMMAND_CREATE)) {
 
-                String name = editTextProjectName.getText().toString();
-                String description = editTextProjectDescription.getText().toString();
+                String name = editTextProjectName.getText().toString().trim();
+                String description = editTextProjectDescription.getText().toString().trim();
                 int unitsTotal = Integer.parseInt(editTextUnitsTotalAmount.getText().toString());
 
                 if (isPaceMode) {
