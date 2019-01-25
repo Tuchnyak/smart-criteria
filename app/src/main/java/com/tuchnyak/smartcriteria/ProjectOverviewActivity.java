@@ -95,15 +95,27 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
     public void buttonIncreaseOnClick(View view) {
 
-        smartProject.checkAndFillGaps();
-        smartProject.increaseCurrentProgress();
-        drawChart();
-        setupChart();
-        lineChart.notifyDataSetChanged();
+        if (SmartProject.getTodayOfMidnight().before(smartProject.getStartDay())) {
 
-        vibrator.vibrate(30);
+            Toast.makeText(this, "Wait for the start day, please!", Toast.LENGTH_SHORT).show();
 
-        saveProject();
+        } else if (SmartProject.getTodayOfMidnight().before(smartProject.getEntriesCurrentPace().lastKey())) {
+
+            Toast.makeText(this, "\"You got no concept of time.\"\n\t\t\t - Emmett Lathrop \"Doc\" Brown, Ph.D.", Toast.LENGTH_LONG).show();
+
+        } else {
+
+            smartProject.checkAndFillGaps();
+            smartProject.increaseCurrentProgress();
+            drawChart();
+            setupChart();
+            lineChart.notifyDataSetChanged();
+
+            vibrator.vibrate(30);
+
+            saveProject();
+
+        }
 
     }
 
@@ -173,7 +185,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
 
         StringBuilder sb = new StringBuilder();
-        sb.append(smartProject.getName()).append(" : ").append(Integer.valueOf(percentage)).append("%\n\n");
+        sb.append(smartProject.getName()).append(" : ").append(Integer.valueOf(percentage)).append("%\n");
+        sb.append("start day: ").append(dateFormat.format(smartProject.getStartDay())).append("\n\n");
 
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
 
