@@ -140,11 +140,15 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         TextView textViewProjectInfo = popupView.findViewById(R.id.textViewProjectInfo);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
+        // percentage of project
         int percentage = (int) (smartProject.getCurrentProgress() * 100 / smartProject.getUnitsTotal());
 
+        // calculate today's progress
         int progressToday = 0;
+        int unitsRelativelyMin = -1;
+        int unitsRelativelyMax = -1;
 
         if (smartProject.getEntriesCurrentPace().size() <= 1) {
             progressToday = (int) smartProject.getCurrentProgress();
@@ -155,18 +159,50 @@ public class ProjectOverviewActivity extends AppCompatActivity {
                         - smartProject.getEntriesCurrentPace().get(keys[keys.length - 1]));
         }
 
+        if (smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
+            unitsRelativelyMin
+                    = (int) (smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
+                    - smartProject.getEntriesMinPace().get(SmartProject.getTodayOfMidnight()));
+        }
+
+        if (smartProject.getEntriesMaxPace().containsKey(SmartProject.getTodayOfMidnight())) {
+            unitsRelativelyMax
+                    = (int) (smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
+                    - smartProject.getEntriesMaxPace().get(SmartProject.getTodayOfMidnight()));
+        }
+
+
         StringBuilder sb = new StringBuilder();
         sb.append(smartProject.getName()).append(" : ").append(Integer.valueOf(percentage)).append("%\n\n");
+
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
+
         sb.append("Today's progress: ").append(progressToday).append("\n");
         sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
-        sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n\n");
+        sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n");
+        sb.append("Units total: ").append(smartProject.getUnitsTotal()).append("\n\n");
+
         sb.append("Minimum pace:").append("\n");
         sb.append("units per day: ").append(Math.round(smartProject.getUnitsPerDayMinPace())).append("\n");
-        sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMinPace())).append("\n\n");
+        sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMinPace())).append("\n");
+        if (unitsRelativelyMin > 0) {
+            sb.append("*** backlog: ").append(unitsRelativelyMin).append(" units ***").append("\n\n");
+        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
+            sb.append("*** PROJECT OVERDUE ***").append("\n\n");
+        } else {
+            sb.append("\n");
+        }
+
         sb.append("Maximum pace:").append("\n");
         sb.append("units per day: ").append(Math.round(smartProject.getUnitsPerDayMaxPace())).append("\n");
         sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMaxPace())).append("\n");
+        if (unitsRelativelyMax > 0) {
+            sb.append("*** backlog: ").append(unitsRelativelyMax).append(" units ***").append("\n\n");
+        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
+            sb.append("*** PROJECT OVERDUE ***").append("\n\n");
+        } else {
+            sb.append("\n");
+        }
 
         textViewProjectInfo.setText(sb.toString());
 
@@ -232,7 +268,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
                 Toast.makeText(ProjectOverviewActivity.this,
                         xLabel + ": " + Math.round(e.getY()) + " units",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
 
             }
 

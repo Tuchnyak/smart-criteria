@@ -322,7 +322,7 @@ public class SmartProject {
         }
 
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
 
         int i = 0;
         for (Map.Entry<Date, Float> entry : tempMap.entrySet()) {
