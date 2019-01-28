@@ -173,13 +173,13 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         if (smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
             unitsRelativelyMin
-                    = (int) (smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
+                    = Math.round(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
                     - smartProject.getEntriesMinPace().get(SmartProject.getTodayOfMidnight()));
         }
 
         if (smartProject.getEntriesMaxPace().containsKey(SmartProject.getTodayOfMidnight())) {
             unitsRelativelyMax
-                    = (int) (smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
+                    = Math.round(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()
                     - smartProject.getEntriesMaxPace().get(SmartProject.getTodayOfMidnight()));
         }
 
