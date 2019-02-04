@@ -3,6 +3,7 @@ package com.tuchnyak.smartcriteria;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Vibrator;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -45,6 +46,7 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
     private TextView textViewProjectName;
     private ImageButton buttonTextInfo;
+    private FloatingActionButton buttonIncrease;
     private Vibrator vibrator;
 
     // field to operate with project that has been gotten
@@ -88,7 +90,54 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         drawChart();
         setupChart();
 
+        //setup vibration
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        //setup floating action button long click
+        buttonIncrease = findViewById(R.id.buttonIncrease);
+        buttonIncrease.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (SmartProject.getTodayOfMidnight().before(smartProject.getStartDay())) {
+
+                    Toast.makeText(ProjectOverviewActivity.this,
+                            "Wait for the start day, please!", Toast.LENGTH_SHORT).show();
+
+                } else if (SmartProject.getTodayOfMidnight().before(smartProject.getEntriesCurrentPace().lastKey())) {
+
+                    Toast.makeText(ProjectOverviewActivity.this,
+                            "\"You got no concept of time.\"\n\t\t\t " +
+                                    "- Emmett Lathrop \"Doc\" Brown, Ph.D.", Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    if (!smartProject.isFinished()
+                            && smartProject.getCurrentProgress() != 0) {
+
+                        smartProject.checkAndFillGaps();
+                        smartProject.decreaseCurrentProgress();
+                        drawChart();
+                        setupChart();
+                        lineChart.notifyDataSetChanged();
+
+                        vibrator.vibrate(30);
+
+                        saveProject();
+
+                    } else {
+
+                        Toast.makeText(ProjectOverviewActivity.this,
+                                "You are not able to decrease current progress!", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                }
+
+                return true;
+            }
+        });
+
 
     }
 
@@ -116,6 +165,11 @@ public class ProjectOverviewActivity extends AppCompatActivity {
                 vibrator.vibrate(30);
 
                 saveProject();
+
+            } else {
+
+                Toast.makeText(this, "The project is finished!", Toast.LENGTH_SHORT).show();
+                vibrator.vibrate(new long[]{0, 30, 200, 30}, -1);
 
             }
 

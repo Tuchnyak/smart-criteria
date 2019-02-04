@@ -286,6 +286,18 @@ public class SmartProject {
 
     }
 
+    public void decreaseCurrentProgress() {
+
+        if (!isFinished && currentProgress != 0) {
+
+            currentProgress--;
+
+            entriesCurrentPace.put(getTodayOfMidnight(), (float) unitsTotal - currentProgress);
+
+        }
+
+    }
+
     /**
      * @return today Date() with time: 0 hours, 0 minutes, 0 seconds and 0 milliseconds.
      */
