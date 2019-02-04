@@ -62,6 +62,8 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     private SmartProject formProject;
 
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class ProjectFormActivity extends AppCompatActivity {
             // TODO populate fields
         } else {
             // do nothing
+            // EDIT Feature in the future
         }
 
     }
@@ -264,8 +267,6 @@ public class ProjectFormActivity extends AppCompatActivity {
                         calendar.set(Calendar.MONTH, month);
                         calendar.set(Calendar.YEAR, year);
 
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
                         switch (tag) {
                             case "date_picker_start":
                                 startDay = calendar.getTime();
@@ -303,6 +304,18 @@ public class ProjectFormActivity extends AppCompatActivity {
         editTextStartDay = findViewById(R.id.editTextStartDay);
         editTextStartDay.setInputType(InputType.TYPE_NULL);
         editTextStartDay.setKeyListener(null);
+
+        buttonStartDayPicker = findViewById(R.id.buttonStartDayPicker);
+        buttonStartDayPicker.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                startDay = SmartProject.getTodayOfMidnight();
+                editTextStartDay.setText(dateFormat.format(startDay));
+
+                return true;
+            }
+        });
 
         buttonStartDayPicker = findViewById(R.id.buttonStartDayPicker);
 
