@@ -167,6 +167,7 @@
                 android:id="@+id/horizontalLayoutDeadlineMinPace"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="end"
                 android:orientation="horizontal">
 
                 <TextView
@@ -175,12 +176,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
+                    android:singleLine="true"
                     android:text="Min pace:"
                     android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextDeadlineMinPace"
-                    android:layout_width="190dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
@@ -215,12 +217,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
+                    android:singleLine="true"
                     android:text="Max pace:"
                     android:textSize="20sp" />
 
                 <EditText
                     android:id="@+id/editTextDeadlineMaxPace"
-                    android:layout_width="190dp"
+                    android:layout_width="170dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="8dp"
@@ -272,7 +275,7 @@
 
                 <EditText
                     android:id="@+id/editTextUnitsPerDayMinPace"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
@@ -298,7 +301,7 @@
 
                 <EditText
                     android:id="@+id/editTextUnitsPerDayMaxPace"
-                    android:layout_width="200dp"
+                    android:layout_width="190dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"

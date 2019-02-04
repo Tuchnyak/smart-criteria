@@ -191,6 +191,37 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
 
         sb.append("Today's progress: ").append(progressToday).append("\n");
+
+        // calculate average day pace
+        if (smartProject.getEntriesCurrentPace() != null
+                && !smartProject.getEntriesCurrentPace().isEmpty()
+                && !smartProject.isFinished()) {
+
+            if (smartProject.getEntriesCurrentPace().size() > 1) {
+                ArrayList<Float> currentValues = new ArrayList<>(smartProject.getEntriesCurrentPace().values());
+                ArrayList<Float> deltas = new ArrayList<>();
+
+                float ref = smartProject.getUnitsTotal();
+
+                for (float currReamainder : currentValues) {
+                    deltas.add(ref - currReamainder);
+                    ref = currReamainder;
+                }
+
+                int deltaSum = 0;
+
+                for (float delta : deltas) {
+                    deltaSum += delta;
+                }
+
+                int avgDailyProgress = Math.round(deltaSum / (float) currentValues.size());
+
+                sb.append("Average daily pace: ").append(avgDailyProgress).append("\n");
+
+            }
+
+        }
+
         sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
         sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n");
         sb.append("Units total: ").append(smartProject.getUnitsTotal()).append("\n\n");
