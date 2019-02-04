@@ -105,15 +105,19 @@ public class ProjectOverviewActivity extends AppCompatActivity {
 
         } else {
 
-            smartProject.checkAndFillGaps();
-            smartProject.increaseCurrentProgress();
-            drawChart();
-            setupChart();
-            lineChart.notifyDataSetChanged();
+            if (!smartProject.isFinished()) {
 
-            vibrator.vibrate(30);
+                smartProject.checkAndFillGaps();
+                smartProject.increaseCurrentProgress();
+                drawChart();
+                setupChart();
+                lineChart.notifyDataSetChanged();
 
-            saveProject();
+                vibrator.vibrate(30);
+
+                saveProject();
+
+            }
 
         }
 
@@ -191,11 +195,9 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         sb.append("Description: ").append(smartProject.getDescription()).append("\n\n");
 
         sb.append("Today's progress: ").append(progressToday).append("\n");
-
         // calculate average day pace
         if (smartProject.getEntriesCurrentPace() != null
-                && !smartProject.getEntriesCurrentPace().isEmpty()
-                && !smartProject.isFinished()) {
+                && !smartProject.getEntriesCurrentPace().isEmpty()) {
 
             if (smartProject.getEntriesCurrentPace().size() > 1) {
                 ArrayList<Float> currentValues = new ArrayList<>(smartProject.getEntriesCurrentPace().values());
@@ -221,7 +223,6 @@ public class ProjectOverviewActivity extends AppCompatActivity {
             }
 
         }
-
         sb.append("Units done: ").append(smartProject.getCurrentProgress()).append("\n");
         sb.append("Units reamins: ").append(smartProject.getUnitsTotal() - smartProject.getCurrentProgress()).append("\n");
         sb.append("Units total: ").append(smartProject.getUnitsTotal()).append("\n\n");
@@ -231,7 +232,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMinPace())).append("\n");
         if (unitsRelativelyMin > 0) {
             sb.append("*** backlog: ").append(unitsRelativelyMin).append(" units ***").append("\n\n");
-        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
+        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())
+                && !smartProject.isFinished()) {
             sb.append("*** PROJECT OVERDUE ***").append("\n\n");
         } else {
             sb.append("\n");
@@ -242,7 +244,8 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         sb.append("deadline day: ").append(dateFormat.format(smartProject.getDeadlineDayMaxPace())).append("\n");
         if (unitsRelativelyMax > 0) {
             sb.append("*** backlog: ").append(unitsRelativelyMax).append(" units ***").append("\n\n");
-        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())) {
+        } else if (!smartProject.getEntriesMinPace().containsKey(SmartProject.getTodayOfMidnight())
+                && !smartProject.isFinished()) {
             sb.append("*** PROJECT OVERDUE ***").append("\n\n");
         } else {
             sb.append("\n");
