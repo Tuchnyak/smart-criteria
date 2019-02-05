@@ -267,6 +267,9 @@ public class SmartProject {
     }
 
 
+    /**
+     * Increases current progress and puts a new value into a today's key in current pace entries
+     */
     public void increaseCurrentProgress() {
 
         if (!isFinished) {
@@ -286,6 +289,9 @@ public class SmartProject {
 
     }
 
+    /**
+     * Decreases current progress and puts a new value into a today's key in current pace entries
+     */
     public void decreaseCurrentProgress() {
 
         if (!isFinished && currentProgress != 0) {
@@ -379,7 +385,7 @@ public class SmartProject {
     @JsonIgnore
     public float[] getYAxisChartValuesMinPace() {
 
-        return getFloatsForAxisFromEntries(entriesMinPace);
+        return getFloatsForYAxisFromEntries(entriesMinPace);
     }
 
 
@@ -389,7 +395,7 @@ public class SmartProject {
     @JsonIgnore
     public float[] getYAxisChartValuesMaxPace() {
 
-        return getFloatsForAxisFromEntries(entriesMaxPace);
+        return getFloatsForYAxisFromEntries(entriesMaxPace);
     }
 
 
@@ -399,7 +405,7 @@ public class SmartProject {
     @JsonIgnore
     public float[] getYAxisChartValuesCurrentPace() {
 
-        return getFloatsForAxisFromEntries(entriesCurrentPace);
+        return getFloatsForYAxisFromEntries(entriesCurrentPace);
     }
 
 
@@ -410,7 +416,7 @@ public class SmartProject {
      * @return float[] - extracted float values for Y Axis
      */
     @JsonIgnore
-    private float[] getFloatsForAxisFromEntries(Map<Date, Float> entriesMap) {
+    private float[] getFloatsForYAxisFromEntries(Map<Date, Float> entriesMap) {
 
         Float[] objArr = entriesMap.values().toArray(new Float[0]);
 
@@ -424,6 +430,9 @@ public class SmartProject {
     }
 
 
+    /**
+     * Prints all project's entries to a console in order to check them
+     */
     public void printEntries() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM", Locale.getDefault());
 

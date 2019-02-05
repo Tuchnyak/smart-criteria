@@ -67,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String STRING_TO_SAVE_PROJECT_LIST = "projectsList";
 
     /**
-     * String constant to transmit certain project by id to another activity
+     * String constants to transmit certain project by id to another activity
      */
     public static final String PROJECT_ID_TRANSMIT_NAME = "projectId";
     public static final String COMMAND_TRANSMIT_NAME = "command";
 
-    // command constants for project form activity
+    // Command constants for project form activity
     public static final String COMMAND_CREATE = "create";
     public static final String COMMAND_EDIT = "edit";
 
@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        // get shared preferences reference to restore projects
         sharedPreferences = this
                 .getSharedPreferences("com.tuchnyak.smartcriteria", Context.MODE_PRIVATE);
 
@@ -91,16 +92,13 @@ public class MainActivity extends AppCompatActivity {
         // restore projects from shared preferences
         smartProjectList = restoreSharedProjects();
 
+        // list to show project names on a screen
         smartProjectNameList = new ArrayList<>();
 
+        // check the presence of a stored projects
         if (smartProjectList == null || smartProjectList.isEmpty()) {
 
             smartProjectList = new ArrayList<>();
-
-            // TODO: delete after implementation of a project creation process
-            SmartProject tempProject = initiateProject();
-            smartProjectList.add(tempProject);
-            smartProjectNameList.add(tempProject.getName());
 
             Toast.makeText(this, "There is a lot of space for new projects!\nBe SMART! Goodluck!", Toast.LENGTH_LONG).show();
 
@@ -131,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 this, android.R.layout.simple_list_item_1, smartProjectNameList
         );
 
+        // save projects in case of changes
         adapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
@@ -347,55 +346,7 @@ public class MainActivity extends AppCompatActivity {
      * Openweb view to download Wiki-article
      */
     private void openWebView() {
-
-    }
-
-
-    // TODO: delete after implementation of a project creation process
-    @Deprecated
-    private SmartProject initiateProject() {
-
-        SmartProject smartProject = null;
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-
-        Date startDay = null;
-        Date deadlineMinPace = null;
-        Date deadlineMaxPace = null;
-
-        try {
-            startDay = dateFormat.parse("26-11-2018");
-            deadlineMinPace = dateFormat.parse("23-12-2018");
-            deadlineMaxPace = dateFormat.parse("09-12-2018");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (startDay != null && deadlineMinPace != null && deadlineMaxPace != null) {
-
-            smartProject = new SmartProject("Test project", "Test project description",
-                    272, startDay, deadlineMinPace, deadlineMaxPace);
-
-            Log.i("===>>>", smartProject.toString());
-            smartProject.printEntries();
-
-        } else {
-            Log.e("===>>>", "Some date are null!");
-        }
-
-        for (float f : smartProject.getYAxisChartValuesMinPace()) {
-            System.out.println(f);
-        }
-
-        for (float f : smartProject.getYAxisChartValuesMaxPace()) {
-            System.out.println(f);
-        }
-
-        for (float f : smartProject.getFloatNumbersForXAxis()) {
-            System.out.println(f);
-        }
-
-        return smartProject;
+        //TODO
     }
 
 

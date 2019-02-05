@@ -44,12 +44,13 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     private LineDataSet smartProjectMaxPaceDataSet;
     private LineDataSet smartProjectCurrentPaceDataSet;
 
+    // ui and ux parts
     private TextView textViewProjectName;
     private ImageButton buttonTextInfo;
     private FloatingActionButton buttonIncrease;
     private Vibrator vibrator;
 
-    // field to operate with project that has been gotten
+    // field to operate with a received project
     private SmartProject smartProject;
 
     // field to store project id to load from project storage
@@ -61,8 +62,13 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_overview);
 
-        getSupportActionBar().hide();
+        // hide action bar
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
+        if (getActionBar() != null)
+            getActionBar().hide();
 
+        // create intent and get ID to receive project from the project list
         Intent intent = getIntent();
         projectId = intent.getIntExtra(MainActivity.PROJECT_ID_TRANSMIT_NAME, -1);
 
@@ -90,11 +96,12 @@ public class ProjectOverviewActivity extends AppCompatActivity {
         drawChart();
         setupChart();
 
-        //setup vibration
+        // setup vibration
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        //setup floating action button long click
+        // setup floating action button long click
         buttonIncrease = findViewById(R.id.buttonIncrease);
+        // decrease project's progress by long click
         buttonIncrease.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -142,6 +149,10 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Increase project's progress
+     * @param view
+     */
     public void buttonIncreaseOnClick(View view) {
 
         if (SmartProject.getTodayOfMidnight().before(smartProject.getStartDay())) {
@@ -188,6 +199,10 @@ public class ProjectOverviewActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Shows project's information in a popup layout
+     * @param view
+     */
     public void showTextInfo(View view) {
 
         LayoutInflater layoutInflater = (LayoutInflater) getBaseContext()

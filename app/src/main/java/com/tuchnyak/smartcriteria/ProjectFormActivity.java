@@ -28,40 +28,60 @@ import java.util.Locale;
 
 public class ProjectFormActivity extends AppCompatActivity {
 
+    // Set of input areas for name, total units amount and description
     private EditText editTextProjectName;
     private EditText editTextUnitsTotalAmount;
     private EditText editTextProjectDescription;
 
+    // Set of button and view to pick and show start day value
     private EditText editTextStartDay;
     private ImageButton buttonStartDayPicker;
 
+    // Radio buttons group to choose creation mode: by dates or by pace
     private RadioGroup radioGroupDeadlinePace;
     private RadioButton radioButtonDeadline;
     private RadioButton radioButtonPace;
 
+    // Layouts to organize input areas for dates and paces
     private LinearLayout verticalLayoutDeadline;
     private LinearLayout verticalLayoutPace;
 
+    // Set of buttons and views to pick and show deadline days values
     private EditText editTextDeadlineMinPace;
     private ImageButton buttonDeadlineMinPaceDatePicker;
-
     private EditText editTextDeadlineMaxPace;
     private ImageButton buttonDeadlineMaxPaceDatePicker;
 
+    // Input fields to get dayly units in pace mode
     private EditText editTextUnitsPerDayMinPace;
     private EditText editTextUnitsPerDayMaxPace;
 
+    // Button to create project
     private Button buttonCreateProject;
 
+    /**
+     * Keeps creation mode
+     */
     private boolean isPaceMode = false;
+
+    /**
+     * Keeps command is it creation or editing mode
+     */
     private String command;
 
+    // Variables to store dates values
     private Date startDay;
     private Date deadlineMinPaceDate;
     private Date deadlineMaxPaceDate;
 
+    /**
+     * Link to the project being created or edited
+     */
     private SmartProject formProject;
 
+    /**
+     * Date format to show dates on screen
+     */
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
 
@@ -72,18 +92,23 @@ public class ProjectFormActivity extends AppCompatActivity {
 
         initiateUI();
 
+        // Receiving command to setup form mode
         command = getIntent().getStringExtra(MainActivity.COMMAND_TRANSMIT_NAME);
 
+        // Setup foem mode
         if (command.equals(MainActivity.COMMAND_EDIT)) {
             // TODO populate fields
         } else {
             // do nothing
-            // EDIT Feature in the future
         }
 
     }
 
 
+    /**
+     * Method collects values from an inputs, creates a new project and opens project overview activity
+     * @param view
+     */
     public void createNewProject(View view) {
 
         if (validateInput()) {
@@ -123,6 +148,10 @@ public class ProjectFormActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Validates user's input
+     * @return true - if all input fields are filled properly
+     */
     private boolean validateInput() {
 
         int titleLimit = 70;
@@ -243,6 +272,10 @@ public class ProjectFormActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Picks a date from popup calendar view, setups date variables and display formatted dates on screen
+     * @param view
+     */
     public void pickDate(View view) {
 
         final String tag = view.getTag().toString();
@@ -268,16 +301,19 @@ public class ProjectFormActivity extends AppCompatActivity {
                         calendar.set(Calendar.YEAR, year);
 
                         switch (tag) {
+                            // setup start date
                             case "date_picker_start":
                                 startDay = calendar.getTime();
                                 editTextStartDay.setText(dateFormat.format(startDay));
                                 break;
 
+                            // setup minimum pace deadline date
                             case "date_picker_min":
                                 deadlineMinPaceDate = calendar.getTime();
                                 editTextDeadlineMinPace.setText(dateFormat.format(deadlineMinPaceDate));
                                 break;
 
+                            // setup maximum pace deadline date
                             case "date_picker_max":
                                 deadlineMaxPaceDate = calendar.getTime();
                                 editTextDeadlineMaxPace.setText(dateFormat.format(deadlineMaxPaceDate));
@@ -293,6 +329,9 @@ public class ProjectFormActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * UI initialization
+     */
     private void initiateUI() {
 
         // setup ActionBar title
