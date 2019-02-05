@@ -343,10 +343,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Openweb view to download Wiki-article
+     * Open web view to download Wiki-article
      */
     private void openWebView() {
-        //TODO
+
+        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+        startActivity(intent);
+
     }
 
 
