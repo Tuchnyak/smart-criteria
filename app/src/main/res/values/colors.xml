@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- App colors -->
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- Chart colors -->
     <color name="colorMinPace">#00CBFF</color>
     <color name="colorMaxPace">#FF5400</color>
     <color name="colorCurrentPace">#000000</color>
-    <color name="lightGray">#D3D3D3</color>
-    <color name="darkGray">#5A5A5A</color>
+
+    <!-- Typographic colors -->
+    <color name="colorLightGray">#D3D3D3</color>
+    <color name="colorDarkGray">#5A5A5A</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+
 </resources>

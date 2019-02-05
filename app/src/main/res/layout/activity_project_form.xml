@@ -322,7 +322,7 @@
             android:background="@color/colorPrimaryDark"
             android:onClick="createNewProject"
             android:text="Create New Project"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/colorWhite"
             android:textSize="16sp" />
 
     </RelativeLayout>

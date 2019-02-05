@@ -295,6 +295,15 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     private void initiateUI() {
 
+        // setup ActionBar title
+        String actionTitle = "SMART form";
+        if (getActionBar() != null) {
+            getActionBar().setTitle(actionTitle);
+        }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(actionTitle);
+        }
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         editTextProjectName = findViewById(R.id.editTextProjectName);
