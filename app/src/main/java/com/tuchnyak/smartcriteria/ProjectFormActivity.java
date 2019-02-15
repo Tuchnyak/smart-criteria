@@ -239,44 +239,43 @@ public class ProjectFormActivity extends AppCompatActivity {
             }
 
         } else {
-            // validate pace values min pace
+            // check fields if empty
             if (editTextUnitsPerDayMinPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMinPace.setError("Field can't be empty");
                 return false;
-            } else if (editTextUnitsPerDayMinPace.getText().toString().trim().length() > 10) {
-                editTextUnitsPerDayMinPace.setError("String length should be no more than 10 characters");
-                return false;
-            } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) >= Integer.MAX_VALUE) {
-                editTextUnitsPerDayMinPace.setError("Value should be less than 2147483647");
-                return false;
-            } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) <= 0) {
-                editTextUnitsPerDayMinPace.setError("Value should be greater than zero");
-                return false;
-            } else if (!editTextUnitsPerDayMaxPace.getText().toString().isEmpty()
-                    && Integer.parseInt(editTextUnitsPerDayMaxPace.getText().toString()) <= Integer.parseInt(editTextUnitsPerDayMinPace.getText().toString())) {
-                editTextUnitsPerDayMinPace.setError("Should be less than max pace per day");
-                return false;
-            } else {
-                editTextUnitsPerDayMinPace.setError(null);
             }
-
-            // validate pace values max pace
             if (editTextUnitsPerDayMaxPace.getText().toString().trim().isEmpty()) {
                 editTextUnitsPerDayMaxPace.setError("Field can't be empty");
                 return false;
-            } else if (editTextUnitsPerDayMaxPace.getText().toString().trim().length() > 10) {
+            }
+            // check fields if too long
+            if (editTextUnitsPerDayMinPace.getText().toString().trim().length() > 10) {
+                editTextUnitsPerDayMinPace.setError("String length should be no more than 10 characters");
+                return false;
+            }
+            if (editTextUnitsPerDayMaxPace.getText().toString().trim().length() > 10) {
                 editTextUnitsPerDayMaxPace.setError("String length should be no more than 10 characters");
                 return false;
-            } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) >= Integer.MAX_VALUE) {
-                editTextUnitsPerDayMaxPace.setError("Value should be less than 2147483647");
+            }
+            // check fields if contain zero value or greater than max integer
+            if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) >= Integer.MAX_VALUE
+                    || Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) <= 0) {
+                editTextUnitsPerDayMinPace.setError("Value should be less than 2147483647\nand greater than 0");
                 return false;
-            } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) <= 0) {
-                editTextUnitsPerDayMaxPace.setError("Value should be greater than zero");
+            }
+            if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) >= Integer.MAX_VALUE
+                    || Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) <= 0) {
+                editTextUnitsPerDayMaxPace.setError("Value should be less than 2147483647\nand greater than 0");
                 return false;
-            } else {
-                editTextUnitsPerDayMaxPace.setError(null);
+            }
+            if (Integer.parseInt(editTextUnitsPerDayMaxPace.getText().toString())
+                    <= Integer.parseInt(editTextUnitsPerDayMinPace.getText().toString())) {
+                editTextUnitsPerDayMaxPace.setError("Should be greater than min pace per day value");
+                return false;
             }
 
+            editTextUnitsPerDayMinPace.setError(null);
+            editTextUnitsPerDayMaxPace.setError(null);
         }
 
         return true;
