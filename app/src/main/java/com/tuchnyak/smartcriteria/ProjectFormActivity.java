@@ -107,6 +107,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     /**
      * Method collects values from an inputs, creates a new project and opens project overview activity
+     *
      * @param view
      */
     public void createNewProject(View view) {
@@ -150,6 +151,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     /**
      * Validates user's input
+     *
      * @return true - if all input fields are filled properly
      */
     private boolean validateInput() {
@@ -177,6 +179,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             return false;
         } else if (Long.parseLong(editTextUnitsTotalAmount.getText().toString()) >= Integer.MAX_VALUE) {
             editTextUnitsTotalAmount.setError("Value should be less than 2147483647");
+            return false;
+        } else if (Long.parseLong(editTextUnitsTotalAmount.getText().toString()) <= 0) {
+            editTextUnitsTotalAmount.setError("Value should be greater than zero");
             return false;
         } else {
             editTextUnitsTotalAmount.setError(null);
@@ -244,6 +249,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) >= Integer.MAX_VALUE) {
                 editTextUnitsPerDayMinPace.setError("Value should be less than 2147483647");
                 return false;
+            } else if (Long.parseLong(editTextUnitsPerDayMinPace.getText().toString()) <= 0) {
+                editTextUnitsPerDayMinPace.setError("Value should be greater than zero");
+                return false;
             } else if (!editTextUnitsPerDayMaxPace.getText().toString().isEmpty()
                     && Integer.parseInt(editTextUnitsPerDayMaxPace.getText().toString()) <= Integer.parseInt(editTextUnitsPerDayMinPace.getText().toString())) {
                 editTextUnitsPerDayMinPace.setError("Should be less than max pace per day");
@@ -262,6 +270,9 @@ public class ProjectFormActivity extends AppCompatActivity {
             } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) >= Integer.MAX_VALUE) {
                 editTextUnitsPerDayMaxPace.setError("Value should be less than 2147483647");
                 return false;
+            } else if (Long.parseLong(editTextUnitsPerDayMaxPace.getText().toString()) <= 0) {
+                editTextUnitsPerDayMaxPace.setError("Value should be greater than zero");
+                return false;
             } else {
                 editTextUnitsPerDayMaxPace.setError(null);
             }
@@ -274,6 +285,7 @@ public class ProjectFormActivity extends AppCompatActivity {
 
     /**
      * Picks a date from popup calendar view, setups date variables and display formatted dates on screen
+     *
      * @param view
      */
     public void pickDate(View view) {
